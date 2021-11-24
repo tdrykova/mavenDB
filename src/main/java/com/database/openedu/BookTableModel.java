@@ -1,4 +1,4 @@
-package com.database;
+package com.database.openedu;
 
 import javax.swing.table.AbstractTableModel;
 import java.sql.ResultSet;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class BookTableModel extends AbstractTableModel {
     // TODO обновление данных
     // TODO удаление
-    private static final long serialVersion = 2134212342322L;
+   // private static final long serialVersion = 2134212342322L;
 
     private int columnCount = 4;
     private ArrayList<String []> dataArrayList; // массив строк
@@ -69,7 +69,7 @@ public class BookTableModel extends AbstractTableModel {
                     addData(row);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("add data isn't worked");
             }
     }
 }

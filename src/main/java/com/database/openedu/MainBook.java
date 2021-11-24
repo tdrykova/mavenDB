@@ -1,4 +1,8 @@
-package com.database;
+package com.database.openedu;
+
+import com.database.DBConnection;
+import com.database.openedu.BookTableModel;
+import com.database.openedu.ConnectionDb;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,10 +11,8 @@ public class MainBook {
 
     public static void main(String[] args) {
 
-        ConnectionDb connect = new ConnectionDb("rroot", "localhost", "rroot");
+        ConnectionDb connect = new ConnectionDb();
         connect.setNameDataDb("Users");
-        connect.initProperties();
-        connect.init();
 
         JFrame frame = new JFrame("FRAME");
         frame.setSize(new Dimension(600,400));

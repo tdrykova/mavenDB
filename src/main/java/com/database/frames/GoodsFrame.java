@@ -11,8 +11,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.PreparedStatement;
@@ -31,8 +30,27 @@ public class GoodsFrame extends JFrame {
     private static final String GET_ALL_SMARTPHONES = "SELECT * FROM smartphones";
     private static final String INSERT = "INSERT image INTO smartphones VALUES(?)";
 
+
+
     public GoodsFrame() {
-        super("Пример панели с вкладками JTabbedPane");
+        JPanel panel1 = new JPanel();
+        panel1.setSize(200,200);
+
+        // JTable table = new JTable(data, columnNames);
+        JTextArea textArea = new JTextArea(25,25);
+        textArea.setText(textArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        panel1.add(scrollPane);
+        // frame.setPreferredSize(new Dimension(450, 200));
+        // scrollPane.pack();
+        //setLocationRelativeTo(null);
+        panel1.setVisible(true);
+
+
+       // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Левая панель со вкладками
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
@@ -45,6 +63,43 @@ public class GoodsFrame extends JFrame {
             ConnectionDb connect = new ConnectionDb();
             // Размещение метки во вкладке
             panel.add(new JLabel(String.format(TEMPL_label, i)));
+            JButton btnPlus = new JButton();
+            JButton btnMinus = new JButton();
+            JButton btnBuy = new JButton();
+            JLabel countLabel = new JLabel();
+            countLabel.setText(Integer.toString(clicksCount));
+            btnPlus.setText("+");
+            btnMinus.setText("-");
+            btnBuy.setText("Buy");
+            panel.add(btnPlus);
+            panel.add(countLabel);
+            panel.add(btnMinus);
+            panel.add(btnBuy);
+
+            btnPlus.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String st = countLabel.getText();
+                    int k = Integer.parseInt(st);
+                    k++;
+                    countLabel.setText(Integer.toString(k));
+                }
+            });
+
+            btnMinus.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String st = countLabel.getText();
+                    int k = Integer.parseInt(st);
+                    if (k >=1)  k--;
+                    countLabel.setText(Integer.toString(k));
+                }
+            });
+
+            btnBuy.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
             // name
             JLabel label = new JLabel();
             label.setLocation(500, 500);
@@ -56,23 +111,19 @@ public class GoodsFrame extends JFrame {
                 JScrollPane bookTableScrollPage = new JScrollPane(bookTable); // что прокрутить
                 bookTableScrollPage.setPreferredSize(new Dimension(400, 200)); // размер табл
 
-                //bookTableScrollPage.addMouseListener();
 
                 // Добавление вкладки
                 tabsLeft.addTab("smartphones", panel);
 
-//                try {
-//                    PreparedStatement preparedStatement = connect.getConnection().prepareStatement(INSERT);
-//                    preparedStatement.setBlob(2, new FileInputStream("pngwing.com.png"));
-//                } catch (SQLException | FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
+
 
                 bookTable.addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
                         int row = bookTable.rowAtPoint(evt.getPoint());
                         int col = bookTable.columnAtPoint(evt.getPoint());
+                        clicksCount = 0;
+                        countLabel.setText(Integer.toString(clicksCount));
                         if (row >= 0 && col >= 0) {
                             //JLabel label = new JLabel();
                             //label.setText("id" + row);
@@ -86,11 +137,26 @@ public class GoodsFrame extends JFrame {
                                 while (res2.next()) {
                                     int id = res2.getInt("id");
                                     String name = res2.getString("name");
-                                    //int count = res2.getInt("img");
+                                    int count = res2.getInt("count");
                                     String  price = res2.getString("price");
 
+                                    btnBuy.addActionListener(new ActionListener() {
+                                        public void actionPerformed(ActionEvent e) {
+                                            if (id == row + 1) {
+                                            int priceInt = Integer.parseInt(price);
+                                            int countInt = Integer.parseInt(countLabel.getText());
+                                            int total = countInt * priceInt;
+                                            String st = Integer.toString(id) + "          " + name + "          " + price + "          " + countLabel.getText() + "     " + total;
+                                                textArea.append(st);
+                                                st = "";
 
+                                                label.setText(name);
+
+                                            }
+ }
+                                    });
                                     if (id == row + 1) {
+
                                         System.out.println("id: " + id + ", name: " + name + "," +
                                                   ", price: " + price);
 
@@ -154,40 +220,21 @@ public class GoodsFrame extends JFrame {
 
         //  JFrame frame = new JFrame("Test frame");
         //  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel();
-        String[] columnNames = {
-                "id",
-                "name",
-                "count",
-                "price"
-        };
-
-        String[][] data = {
-                {"addins", "02.11.2006 19:15", "Folder", ""},
-                {"AppPatch", "03.10.2006 14:10", "Folder", ""},
-                {"assembly", "02.11.2006 14:20", "Folder", ""},
-                {"Boot", "13.10.2007 10:46", "Folder", ""},
-                {"Branding", "13.10.2007 12:10", "Folder", ""},
-                {"Cursors", "23.09.2006 16:34", "Folder", ""},
-                {"Debug", "07.12.2006 17:45", "Folder", ""},
-                {"Fonts", "03.10.2006 14:08", "Folder", ""},
-                {"Help", "08.11.2006 18:23", "Folder", ""},
-                {"explorer.exe", "18.10.2006 14:13", "File", "2,93MB"},
-                {"helppane.exe", "22.08.2006 11:39", "File", "4,58MB"},
-                {"twunk.exe", "19.08.2007 10:37", "File", "1,08MB"},
-                {"nsreg.exe", "07.08.2007 11:14", "File", "2,10MB"},
-                {"avisp.exe", "17.12.2007 16:58", "File", "12,67MB"},
-        };
-
-        JTable table = new JTable(data, columnNames);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        panel.add(scrollPane);
-        // frame.setPreferredSize(new Dimension(450, 200));
-        // scrollPane.pack();
-        //setLocationRelativeTo(null);
-        panel.setVisible(true);
+//        JPanel panel = new JPanel();
+//        panel.setSize(200,200);
+//
+//       // JTable table = new JTable(data, columnNames);
+//        JTextArea textArea = new JTextArea(25,25);
+//        textArea.setText(textArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+//
+//
+//        JScrollPane scrollPane = new JScrollPane(textArea);
+//
+//        panel.add(scrollPane);
+//        // frame.setPreferredSize(new Dimension(450, 200));
+//        // scrollPane.pack();
+//        //setLocationRelativeTo(null);
+//        panel.setVisible(true);
 
         // Определение табличного расположения компонентов
         getContentPane().setLayout(new GridLayout());

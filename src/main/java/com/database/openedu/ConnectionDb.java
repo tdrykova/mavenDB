@@ -30,7 +30,24 @@ public class ConnectionDb {
 
     }
 
-//    public ConnectionDb(String password, String host, String root) {
+    public Connection getMySqlConnection() {
+        return mySqlConnection;
+    }
+
+    public void setMySqlConnection(Connection mySqlConnection) {
+        this.mySqlConnection = mySqlConnection;
+    }
+
+    public Connection getConnection() {
+        try {
+            mySqlConnection = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mySqlConnection;
+    }
+
+    //    public ConnectionDb(String password, String host, String root) {
 //        this.password = password;
 //        this.host = host;
 //        this.root = root;

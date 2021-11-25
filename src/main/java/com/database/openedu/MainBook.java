@@ -30,7 +30,7 @@ public class MainBook {
         JScrollPane bookTableScrollPage = new JScrollPane(bookTable); // что прокрутить
         bookTableScrollPage.setPreferredSize(new Dimension(400,400)); // размер табл
 
-        bookTableModel.addData(connect);
+        bookTableModel.addDataUsers(connect);
 
 //        String[]str = new String[4];
 //        str[0] = "0";

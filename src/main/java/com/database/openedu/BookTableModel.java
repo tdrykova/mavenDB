@@ -35,8 +35,8 @@ public class BookTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case 0: return "id";
             case 1: return "name";
-            case 2: return "age";
-            case 3: return "email";
+            case 2: return "count";
+            case 3: return "price";
         }
         return "";
     }
@@ -54,7 +54,7 @@ public class BookTableModel extends AbstractTableModel {
         dataArrayList.add(rowTable);
     }
 
-    public void addData(ConnectionDb connect) {
+    public void addDataUsers(ConnectionDb connect) {
         ResultSet result = connect.resultSetQuery("SELECT * FROM users");
 
             try {
@@ -68,8 +68,52 @@ public class BookTableModel extends AbstractTableModel {
 
                     addData(row);
                 }
+                // do smth else
+                result.close();
             } catch (SQLException e) {
                 System.out.println("add data isn't worked");
             }
+    }
+
+    public void addDataSmartPhones(ConnectionDb connect) {
+        ResultSet result = connect.resultSetQuery("SELECT * FROM smartphones");
+
+        try {
+            while (result.next()) {
+                String id = result.getString("id");
+                String name = result.getString("name");
+                String count = result.getString("count");
+                String email = result.getString("price");
+
+                String []row = {id, name, count, email};
+
+                addData(row);
+            }
+            // do smth else
+            result.close();
+        } catch (SQLException e) {
+            System.out.println("add data isn't worked");
+        }
+    }
+
+    public void addDataComputers(ConnectionDb connect) {
+        ResultSet result = connect.resultSetQuery("SELECT * FROM computers");
+
+        try {
+            while (result.next()) {
+                String id = result.getString("id");
+                String name = result.getString("name");
+                String count = result.getString("count");
+                String price = result.getString("price");
+
+                String []row = {id, name, count, price};
+
+                addData(row);
+            }
+            // do smth else
+            result.close();
+        } catch (SQLException e) {
+            System.out.println("add data isn't worked");
+        }
     }
 }

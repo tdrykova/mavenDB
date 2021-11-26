@@ -1,13 +1,25 @@
 package com.database.frames;
 
+import com.database.openedu.ConnectionDb;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginFrame extends JFrame implements ActionListener {
+
+    private static final String INSERT_NEW_USER = "INSERT INTO users VALUES (?, ?, ?, ?, ?)";
+    private static final String GET_ALL_USERS = "SELECT * FROM users";
+    PreparedStatement preparedStatement = null;
+    PreparedStatement preparedStatement2 = null;
+    ConnectionDb connect = new ConnectionDb();
+    int countUsers = 0;
 
     String[] customer = {
             "Usual",
@@ -122,17 +134,86 @@ public class LoginFrame extends JFrame implements ActionListener {
         if (e.getSource() == loginButton) {
             String userText;
             userText = userTextField.getText();
-            if (!userText.isEmpty()) {
-                dispose();
-                new GoodsFrame();
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid Username");
+            int isVip = 0;
+
+            try {
+                preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
+                //preparedStatement.setInt(1, 1);
+                ResultSet res2 = preparedStatement2.executeQuery();
+
+                while (res2.next() && isVip != 1) {
+                    int id = res2.getInt("id");
+                    String name = res2.getString("name");
+                    int card = res2.getInt("card");
+                    String  email = res2.getString("email");
+                    String  status = res2.getString("status");
+
+
+                    if (userTextField.getText() == name) {
+                        isVip++;
+                        JOptionPane.showMessageDialog(LoginFrame.this,
+                                        "Вы наш Vip-клиент! Добро пожаловать в магазин");
+                        dispose();
+                        new GoodsFrame();
+
+                    }
+                }
+            } catch (SQLException es) {
+                es.printStackTrace();
             }
 
+            if (isVip == 0) {
+
+                if (!userText.isEmpty()) {
+
+
+                    countUsers++;
+                    System.out.println(countUsers);
+
+
+                    try {
+                        preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_USER);
+                        preparedStatement.setInt(1,countUsers);
+                        preparedStatement.setString(2,userTextField.getText());
+                        if (customerState.getSelectedItem() == "Vip") {
+                            preparedStatement.setString(5, "Vip");
+                            preparedStatement.setString(3, cardTextField.getText());
+                        } else {
+                            preparedStatement.setString(5, "Usual");
+                            preparedStatement.setString(3, "0");
+                        }
+                        preparedStatement.setString(4,"tat@yandex.ru");
+                        preparedStatement.execute();
+
+
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    dispose();
+                    new GoodsFrame();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Username");
+                }
+
+
+
+            }
+
+
+
+            if (e.getSource() == resetButton) {
+                userTextField.setText("");
+            }
+
+
         }
-        if (e.getSource() == resetButton) {
-            userTextField.setText("");
+
         }
+
+
     }
 
-}
+

@@ -23,8 +23,6 @@ public class GoodsFrame extends JFrame {
     private final Color[] colors = {Color.cyan, Color.orange};
     private final String TEMPL_label = "Метка %d";
     private final String TEMPL_dynamic = "Динамическая метка %d";
-    private final String TEMPL_button = "Кнопка %d";
-    private final String TEMPL_tab = "Вкладка %d";
     private int clicksCount = 0;
 
     private static final String GET_ALL_SMARTPHONES = "SELECT * FROM smartphones";
@@ -33,6 +31,8 @@ public class GoodsFrame extends JFrame {
 
 
     public GoodsFrame() {
+
+        ConnectionDb connect = new ConnectionDb();
         JPanel panel1 = new JPanel();
         panel1.setSize(200,200);
 
@@ -58,9 +58,6 @@ public class GoodsFrame extends JFrame {
         // Создание вкладок
         for (int i = 1; i < colors.length + 1; i++) {
             JPanel panel = new JPanel();
-            // Подкрашиваем панель
-            //panel.setBackground(colors[i - 1]);
-            ConnectionDb connect = new ConnectionDb();
             // Размещение метки во вкладке
             panel.add(new JLabel(String.format(TEMPL_label, i)));
             JButton btnPlus = new JButton();
@@ -94,11 +91,7 @@ public class GoodsFrame extends JFrame {
                 }
             });
 
-            btnBuy.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
 
-                }
-            });
 
             // name
             JLabel label = new JLabel();

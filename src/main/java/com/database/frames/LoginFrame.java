@@ -11,11 +11,13 @@ import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class LoginFrame extends JFrame implements ActionListener {
 
     private static final String INSERT_NEW_USER = "INSERT INTO users VALUES (?, ?, ?, ?, ?)";
     private static final String GET_ALL_USERS = "SELECT * FROM users";
+    private String GET_COUNT_USERS = "SELECT COUNT(*) FROM users";
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
     ConnectionDb connect = new ConnectionDb();
@@ -133,6 +135,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
             String userText;
+            int isNew = 0;
             userText = userTextField.getText();
             int isVip = 0;
 
@@ -140,75 +143,72 @@ public class LoginFrame extends JFrame implements ActionListener {
                 preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
                 //preparedStatement.setInt(1, 1);
                 ResultSet res2 = preparedStatement2.executeQuery();
+//                res2.last();
+//                int rowCount = res2.getRow();
 
-                while (res2.next() && isVip != 1) {
+                Statement stmt = connect.getConnection().createStatement();
+                ResultSet rs = stmt.executeQuery(GET_COUNT_USERS);
+                //Retrieving the result
+                rs.next();
+               // rs.last();
+                //int count = rs.getInt(1);
+                int count = rs.getRow();
+               // System.out.println("Number of records in the cricketers_data table: " + count);
+
+                while (res2.next() && (isVip == 0)) {
+
                     int id = res2.getInt("id");
                     String name = res2.getString("name");
                     int card = res2.getInt("card");
                     String  email = res2.getString("email");
                     String  status = res2.getString("status");
 
-
                     if (userTextField.getText() == name) {
                         isVip++;
-                        JOptionPane.showMessageDialog(LoginFrame.this,
-                                        "Вы наш Vip-клиент! Добро пожаловать в магазин");
-                        dispose();
-                        new GoodsFrame();
+                        System.out.println(isVip);
+//                        JOptionPane.showMessageDialog(LoginFrame.this,
+//                                        "Вы наш Vip-клиент! Добро пожаловать в магазин");
+
 
                     }
+
+                        if (!userText.isEmpty() && customerState.getSelectedItem() == "Usual") {
+                            isNew++;
+                            count++;
+                            try {
+                                preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_USER);
+                                preparedStatement.setInt(1,count);
+                                preparedStatement.setString(2,userTextField.getText());
+                                if (customerState.getSelectedItem() == "Vip") {
+                                    preparedStatement.setString(5, "Vip");
+                                    preparedStatement.setString(3, cardTextField.getText());
+                                } else {
+                                    preparedStatement.setString(5, "Usual");
+                                    preparedStatement.setString(3, "0");
+                                }
+                                preparedStatement.setString(4,"tat@yandex.ru");
+                                preparedStatement.execute();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+
+                        } else if (userTextField.bounds().isEmpty()){
+                            JOptionPane.showMessageDialog(this, "Invalid Username");
+                        }
+
                 }
+                System.out.println(count);
             } catch (SQLException es) {
                 es.printStackTrace();
             }
+            dispose();
+            new GoodsFrame();
 
-            if (isVip == 0) {
+        }
 
-                if (!userText.isEmpty()) {
-
-
-                    countUsers++;
-                    System.out.println(countUsers);
-
-
-                    try {
-                        preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_USER);
-                        preparedStatement.setInt(1,countUsers);
-                        preparedStatement.setString(2,userTextField.getText());
-                        if (customerState.getSelectedItem() == "Vip") {
-                            preparedStatement.setString(5, "Vip");
-                            preparedStatement.setString(3, cardTextField.getText());
-                        } else {
-                            preparedStatement.setString(5, "Usual");
-                            preparedStatement.setString(3, "0");
-                        }
-                        preparedStatement.setString(4,"tat@yandex.ru");
-                        preparedStatement.execute();
-
-
-
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    dispose();
-                    new GoodsFrame();
-
-                } else {
-                    JOptionPane.showMessageDialog(this, "Invalid Username");
-                }
-
-
-
-            }
-
-
-
-            if (e.getSource() == resetButton) {
-                userTextField.setText("");
-            }
-
-
+        if (e.getSource() == resetButton) {
+            userTextField.setText("");
+           // cardTextField.setText("");
         }
 
         }

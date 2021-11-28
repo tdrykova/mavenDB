@@ -184,9 +184,6 @@ public class GoodsFrame extends JFrame {
                 panel.add(bookTableScrollPage);
                 bookTableModel.addDataComputers(connect);
             }
-
-            // Подключение мнемоники
-          //  tabsLeft.setMnemonicAt(i - 1, String.valueOf(i).charAt(0));
         }
         // Подключение слушателя событий
         tabsLeft.addChangeListener(new ChangeListener() {

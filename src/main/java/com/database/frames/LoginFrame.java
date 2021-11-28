@@ -155,7 +155,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 int count = rs.getRow();
                // System.out.println("Number of records in the cricketers_data table: " + count);
 
-                while (res2.next() && (isVip == 0)) {
+                while (res2.next()) {
 
                     int id = res2.getInt("id");
                     String name = res2.getString("name");
@@ -169,10 +169,9 @@ public class LoginFrame extends JFrame implements ActionListener {
 //                        JOptionPane.showMessageDialog(LoginFrame.this,
 //                                        "Вы наш Vip-клиент! Добро пожаловать в магазин");
 
-
                     }
 
-                        if (!userText.isEmpty() && customerState.getSelectedItem() == "Usual") {
+                        if (isVip == 0) {
                             isNew++;
                             count++;
                             try {

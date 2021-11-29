@@ -1,4 +1,4 @@
-insert into users (name, card, email)values ('Steve', 55, 'alex@yandex.ru');
+insert into users (name, phone, email)values ('Steve', 55, 'alex@yandex.ru');
 
 #select * from users;
 #select name, age from users where id = 1;

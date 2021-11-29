@@ -12,7 +12,7 @@ public class Main2 {
 
     private static final String INSERT_NEW = "INSERT INTO users VALUES (?, ?, ?, ?)";
     private static final String GET_ALL = "SELECT * FROM users";
-    private static final String DELETE = "DELETE FROM users WHERE id = ?";
+    private static final String DELETE = "SELECT * FROM users WHERE id = ?";
 
     public static void main(String[] args) {
 

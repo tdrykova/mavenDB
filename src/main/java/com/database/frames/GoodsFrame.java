@@ -8,6 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.io.FileNotFoundException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
+import java.util.Vector;
 
 public class GoodsFrame extends JFrame {
 
@@ -24,30 +27,66 @@ public class GoodsFrame extends JFrame {
     private final String TEMPL_label = "Метка %d";
     private final String TEMPL_dynamic = "Динамическая метка %d";
     private int clicksCount = 0;
+    private int countBuy = 0;
 
     private static final String GET_ALL_SMARTPHONES = "SELECT * FROM smartphones";
     private static final String INSERT = "INSERT image INTO smartphones VALUES(?)";
+    private static final String SELECT_ONE = "SELECT * FROM smartphones WHERE id = ?";
+    private String[] columnsHeader = {"id", "name", "count","price", "total"};
 
-
+    private Object[][] array2 = {};
+    // Заголовки столбцов
 
     public GoodsFrame() {
 
         ConnectionDb connect = new ConnectionDb();
         JPanel panel1 = new JPanel();
-        panel1.setSize(200,200);
+        panel1.setSize(200,100);
 
-        // JTable table = new JTable(data, columnNames);
-        JTextArea textArea = new JTextArea(25,25);
-        textArea.setText(textArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+//
+//        JFrame frame = new JFrame("Test frame");
+//          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        JPanel panel = new JPanel();
+//        panel.setSize(200,200);
+
+       // JTable table = new JTable(data, columnNames);
+//        JTextArea textArea = new JTextArea(25,25);
+//        textArea.setText(textArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+        //JTable table = new JTable();
+
+        DefaultTableModel defTableModel = new DefaultTableModel(array2, columnsHeader);
+        JTable defTable = new JTable(defTableModel);
+
+        panel1.add(defTable);
+        JScrollPane bookTableScrollPage = new JScrollPane(defTable); // что прокрутить
+        bookTableScrollPage.setPreferredSize(new Dimension(400, 200));
+
+        JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
 
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
-
-        panel1.add(scrollPane);
+//        panel1.add(scrollPane);
         // frame.setPreferredSize(new Dimension(450, 200));
         // scrollPane.pack();
         //setLocationRelativeTo(null);
         panel1.setVisible(true);
+
+        // JTable table = new JTable(data, columnNames);
+//        JTextArea textArea = new JTextArea(25,25);
+//        textArea.setText(textArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+
+//        String[] colHeadings = new String[] {"id","name", "price","count", "total"};
+//        int numRows = 0;
+//        DefaultTableModel model = new DefaultTableModel(numRows, colHeadings.length);
+//        model.setColumnIdentifiers(colHeadings);
+//        JTable table = new JTable(model);
+//        DefaultTableModel model1 = (DefaultTableModel)table.getModel();
+
+       // JScrollPane scrollPane = new JScrollPane(textArea);
+
+      //  panel1.add(scrollPane);
+        // frame.setPreferredSize(new Dimension(450, 200));
+        // scrollPane.pack();
+        //setLocationRelativeTo(null);
 
 
        // super("Пример панели с вкладками JTabbedPane");
@@ -99,90 +138,149 @@ public class GoodsFrame extends JFrame {
             panel.add(label);
 
             if (i == 1) {
-                BookTableModel bookTableModel = new BookTableModel();
-                JTable bookTable = new JTable(bookTableModel);
-                JScrollPane bookTableScrollPage = new JScrollPane(bookTable); // что прокрутить
-                bookTableScrollPage.setPreferredSize(new Dimension(400, 200)); // размер табл
+                BookTableModel bookTableModel1 = new BookTableModel();
+                JTable bookTable1 = new JTable(bookTableModel1);
+                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
+                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
 
 
                 // Добавление вкладки
                 tabsLeft.addTab("smartphones", panel);
 
+                btnBuy.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
 
+                    TableModel modelFirst = bookTable1.getModel();
+                    int indexs[] = bookTable1.getSelectedRows();
 
-                bookTable.addMouseListener(new java.awt.event.MouseAdapter() {
-                    @Override
-                    public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        int row = bookTable.rowAtPoint(evt.getPoint());
-                        int col = bookTable.columnAtPoint(evt.getPoint());
-                        clicksCount = 0;
-                        countLabel.setText(Integer.toString(clicksCount));
-                        if (row >= 0 && col >= 0) {
-                            //JLabel label = new JLabel();
-                            //label.setText("id" + row);
-                            PreparedStatement preparedStatement = null;
-                           // preparedStatement = connect.getMySqlConnection(connect).prepareStatement(GET_ROW_COMPUTER);
-                            try {
-                                preparedStatement = connect.getConnection().prepareStatement(GET_ALL_SMARTPHONES);
-                                //preparedStatement.setInt(1, 1);
-                                ResultSet res2 = preparedStatement.executeQuery();
+                    Object[] row = new Object[5];
 
-                                while (res2.next()) {
-                                    int id = res2.getInt("id");
-                                    String name = res2.getString("name");
-                                    int count = res2.getInt("count");
-                                    String  price = res2.getString("price");
+                    DefaultTableModel modelSecond = (DefaultTableModel)defTable.getModel();
 
-                                    btnBuy.addActionListener(new ActionListener() {
-                                        public void actionPerformed(ActionEvent e) {
-                                            if (id == row + 1) {
-                                            int priceInt = Integer.parseInt(price);
-                                            int countInt = Integer.parseInt(countLabel.getText());
-                                            int total = countInt * priceInt;
-                                            String st = Integer.toString(id) + "          " + name + "          " + price + "          " + countLabel.getText() + "     " + total;
-                                                textArea.append(st);
-                                                st = "";
+                    for (int i = 0; i < indexs.length; i++) {
+                        row[0] = modelFirst.getValueAt(indexs[i], 0);
+                        row[1] = modelFirst.getValueAt(indexs[i], 1);
+                        row[2] = Integer.parseInt(countLabel.getText());
+                        row[3] = modelFirst.getValueAt(indexs[i], 3);
+                        row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
 
-                                                label.setText(name);
-
-                                            }
- }
-                                    });
-                                    if (id == row + 1) {
-
-                                        System.out.println("id: " + id + ", name: " + name + "," +
-                                                  ", price: " + price);
-
-                                        label.setText(name);
-
-                                    }
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
+                        modelSecond.addRow(row);
                     }
-                });
+
+
+                }});
+
+//                bookTable.addMouseListener(new java.awt.event.MouseAdapter() {
+//                    @Override
+//                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+//                        int row = bookTable.rowAtPoint(evt.getPoint());
+//                        int col = bookTable.columnAtPoint(evt.getPoint());
+//                        clicksCount = 0;
+//                        int kol = 0;
+//                        countLabel.setText(Integer.toString(clicksCount));
+//                        if (row >= 0 && col >= 0) {
+//                            System.out.println(row);
+//                            System.out.println(col);
+//                            btnBuy.addActionListener(new ActionListener() {
+//                                @Override
+//                                public void actionPerformed(ActionEvent e) {
+//                                    int idx = bookTable.getSelectedRow();
+//                                    Vector<String> v = new Vector<String>(5);
+////                                    v.add( Integer.toString(row));
+////                                    v.add( String.valueOf(table.getValueAt(row+1,0)));
+////                                    v.add( String.valueOf(table.getValueAt(row+1,1)));
+////                                    v.add( String.valueOf(table.getValueAt(row+1,2)));
+////                                    v.add( String.valueOf(table.getValueAt(row+1,3)));
+////                                    model1.addRow(v);
+//                                    model.insertRow(idx , new String[] {"Товар №" + String.valueOf(bookTable.getRowCount()),
+//                                            "кг", "Цена"});
+//                                }
+//
+//
+//
+//                            });
+//
+//                            //model.addRow(new Object[]{id, name, price, countLabel.getText(), total});
+//                            //JLabel label = new JLabel();
+//                            //label.setText("id" + row);
+////                            PreparedStatement preparedStatement = null;
+////                            PreparedStatement preparedStatement3 = null;
+////                           // preparedStatement = connect.getMySqlConnection(connect).prepareStatement(GET_ROW_COMPUTER);
+////                            try {
+////                                preparedStatement = connect.getConnection().prepareStatement(GET_ALL_SMARTPHONES);
+////                                //preparedStatement.setInt(1, 1);
+////                                preparedStatement3 = connect.getConnection().prepareStatement(SELECT_ONE);
+////                                ResultSet res2 = preparedStatement.executeQuery();
+////
+////                                preparedStatement3.setInt(1, row+1);
+////                                ResultSet res3 = preparedStatement3.executeQuery();
+////
+////                                while (res2.next()) {
+////                                    kol++;
+////                                    int id = res2.getInt("id");
+////                                    String name = res2.getString("name");
+////                                    int count = res2.getInt("count");
+////                                    String  price = res2.getString("price");
+//
+////                                    if (id == row + 1 && kol == id) {
+////                                        btnBuy.addActionListener(new ActionListener() {
+////                                            public void actionPerformed(ActionEvent e) {
+////
+////                                                {
+////                                                    int priceInt = Integer.parseInt(price);
+////                                                    int countInt = Integer.parseInt(countLabel.getText());
+////                                                    int total = countInt * priceInt;
+////                                                    String st = Integer.toString(id) + "          " + name + "          " + price + "          " + countLabel.getText() + "     " + total;
+////                                                    //textArea.append(st);
+////                                                    // table.addRowSelectionInterval(row, row);
+////                                                    st = "";
+////                                                    //model1.addRow(new Object[] {id, name, price, countLabel.getText(), total});
+////                                                    model.addRow(new Object[]{id, name, price, countLabel.getText(), total});
+////                                                    label.setText(name);
+////                                                    countBuy++;
+////                                                }
+////                                            }
+////                                        });
+////
+////                                    }
+//
+//
+//
+////                                    if (id == row + 1) {
+////
+////                                        System.out.println("id: " + id + ", name: " + name + "," +
+////                                                  ", price: " + price);
+////
+////                                        label.setText(name);
+////
+////                                    }
+////                                }
+////                            } catch (SQLException e) {
+////                                e.printStackTrace();
+////                            }
+//
+//                        }
+//                    }
+//                });
 
 
 
-                panel.add(bookTableScrollPage);
-                panel.add(bookTableScrollPage);
-                bookTableModel.addDataSmartPhones(connect);
+                panel.add(bookTableScrollPage1);
+                panel.add(bookTableScrollPage1);
+                bookTableModel1.addDataSmartPhones(connect);
             }
 
             if (i == 2) {
-                BookTableModel bookTableModel = new BookTableModel();
-                JTable bookTable = new JTable(bookTableModel);
-                JScrollPane bookTableScrollPage = new JScrollPane(bookTable); // что прокрутить
-                bookTableScrollPage.setPreferredSize(new Dimension(400, 400)); // размер табл
+                BookTableModel bookTableModel1 = new BookTableModel();
+                JTable bookTable1 = new JTable(bookTableModel1);
+                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
+                bookTableScrollPage1.setPreferredSize(new Dimension(400, 400)); // размер табл
 
                 // Добавление вкладки
                 tabsLeft.addTab("computers", panel);
 
-                panel.add(bookTableScrollPage);
-                bookTableModel.addDataComputers(connect);
+                panel.add(bookTableScrollPage1);
+                bookTableModel1.addDataComputers(connect);
             }
         }
         // Подключение слушателя событий
@@ -229,8 +327,8 @@ public class GoodsFrame extends JFrame {
         // Определение табличного расположения компонентов
         getContentPane().setLayout(new GridLayout());
         // Добавление вкладок в панель содержимого
-        getContentPane().add(tabsLeft);
-        getContentPane().add(scrollPane);
+       getContentPane().add(tabsLeft);
+       getContentPane().add(bookTableScrollPage);
         // Вывод окна на экран
         setSize(800, 400);
         setVisible(true);

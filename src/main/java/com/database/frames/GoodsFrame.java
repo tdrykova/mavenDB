@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -34,12 +35,14 @@ public class GoodsFrame extends JFrame {
     private static final String SELECT_ONE = "SELECT * FROM smartphones WHERE id = ?";
     private String[] columnsHeader = {"id", "name", "count","price", "total"};
 
+    private DefaultTableModel modelSecond;
     private Object[][] array2 = {};
     // Заголовки столбцов
 
     public GoodsFrame() {
 
         ConnectionDb connect = new ConnectionDb();
+
         JPanel panel1 = new JPanel();
         panel1.setSize(200,100);
 
@@ -59,7 +62,7 @@ public class GoodsFrame extends JFrame {
 
         panel1.add(defTable);
         JScrollPane bookTableScrollPage = new JScrollPane(defTable); // что прокрутить
-        bookTableScrollPage.setPreferredSize(new Dimension(400, 200));
+        bookTableScrollPage.setPreferredSize(new Dimension(400, 100));
 
         JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
 
@@ -155,7 +158,7 @@ public class GoodsFrame extends JFrame {
 
                     Object[] row = new Object[5];
 
-                    DefaultTableModel modelSecond = (DefaultTableModel)defTable.getModel();
+                    modelSecond = (DefaultTableModel)defTable.getModel();
 
                     for (int i = 0; i < indexs.length; i++) {
                         row[0] = modelFirst.getValueAt(indexs[i], 0);
@@ -164,7 +167,15 @@ public class GoodsFrame extends JFrame {
                         row[3] = modelFirst.getValueAt(indexs[i], 3);
                         row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
 
+                      //  ArrayList<String > arrayList = new ArrayList<>();
+
+
+                        String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
+                                + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
                         modelSecond.addRow(row);
+                        //item = "";
+                        // arrayList.add(item);
+                      //  ListOfGoods.jt.append(item);
                     }
 
 
@@ -274,7 +285,7 @@ public class GoodsFrame extends JFrame {
                 BookTableModel bookTableModel1 = new BookTableModel();
                 JTable bookTable1 = new JTable(bookTableModel1);
                 JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
-                bookTableScrollPage1.setPreferredSize(new Dimension(400, 400)); // размер табл
+                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
 
                 // Добавление вкладки
                 tabsLeft.addTab("computers", panel);
@@ -323,14 +334,84 @@ public class GoodsFrame extends JFrame {
 //        // scrollPane.pack();
 //        //setLocationRelativeTo(null);
 //        panel.setVisible(true);
+        JButton btnGoToCashier = new JButton();
+        btnGoToCashier.setText("Go to a cash");
+        btnGoToCashier.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // ListOfGoods listOfGoods = new ListOfGoods();
+                JFrame fr2 = new JFrame();
+                //int indexs[] = new int[0];
 
+                JFrame f = new JFrame("textfield");
+                f.setLayout(new BorderLayout());
+
+                JPanel panel1 = new JPanel();
+                JPanel panel2 = new JPanel();
+
+
+                // create a label to display text
+               // l = new JLabel("nothing entered");
+
+                // create a new button
+                JButton b = new JButton("submit");
+                b.setText("Get a SMS-check");
+                b.setSize(new Dimension(10,20));
+
+                JTextArea checkTextArea = new JTextArea(25,5);
+                checkTextArea.setText(checkTextArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+                JScrollPane scrollPane = new JScrollPane(checkTextArea);
+                scrollPane.setSize(600, 400);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+                panel1.add(checkTextArea);
+                panel2.add(b);
+
+                f.add(panel1, BorderLayout.NORTH);
+                f.add(panel2, BorderLayout.CENTER);
+
+                f.setSize(600, 500);
+                f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+
+                Object[] row = new Object[5];
+                int cols = modelSecond.getColumnCount();
+                int rows = modelSecond.getRowCount();
+
+               // DefaultTableModel modelSecond = (DefaultTableModel)defTable.getModel();
+                JTable jTable = new JTable(modelSecond);
+
+
+                for (int i = 0; i < rows; i++) {
+                    row[0] = modelSecond.getValueAt(i, 0);
+                    row[1] = modelSecond.getValueAt(i, 1);
+                    row[2] = modelSecond.getValueAt(i, 3);
+                    row[3] = modelSecond.getValueAt(i, 3);
+                    row[4] = modelSecond.getValueAt(i, 4);
+
+                    //  ArrayList<String > arrayList = new ArrayList<>();
+
+
+                    String item = row[0] + "   " + row[1] + "   " + row[2]  + "   " + row[3] + "   " + row[4];
+
+                    checkTextArea.append(item + "\n");
+                    item = "";
+
+                }
+                f.setVisible(true);
+            }});
+
+        JButton btnDeleteGoods = new JButton();
+        btnDeleteGoods.setText("Return selected goods");
         // Определение табличного расположения компонентов
-        getContentPane().setLayout(new GridLayout());
+        getContentPane().setLayout(new GridLayout(4,2));
         // Добавление вкладок в панель содержимого
        getContentPane().add(tabsLeft);
        getContentPane().add(bookTableScrollPage);
+       getContentPane().add(btnGoToCashier);
+       getContentPane().add(btnDeleteGoods);
         // Вывод окна на экран
-        setSize(800, 400);
+        setSize(800, 600);
         setVisible(true);
     }
 }
+

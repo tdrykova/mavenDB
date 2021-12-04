@@ -8,10 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,21 +24,39 @@ public class AdminFrame extends JFrame implements ActionListener {
 
     private static final String INSERT_NEW_SMARTPHONE = "INSERT INTO smartphones VALUES (?, ?, ?, ?)";
     private static final String GET_ALL_SMART = "SELECT * FROM smartphones";
+    private static final String INSERT_NEW_COMPUTER = "INSERT INTO computers VALUES (?, ?, ?, ?)";
+    private static final String GET_ALL_COMPUTERS = "SELECT * FROM computers";
+    private static final String DELETE = "SELECT * FROM smartphones WHERE id = ?";
+
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
+    PreparedStatement preparedStatement3 = null;
     ConnectionDb connect = new ConnectionDb();
-    private int idGoods = 20;
+    private String nameOfDb = "";
+    private int idGoods = 0;
 
-    public BookTableModel smart;
-    public JScrollPane smartScroll;
-    public JPanel smartPanel;
+    private BookTableModel smart;
+    private JScrollPane smartScroll;
+    private JPanel smartPanel;
+    private JTable smartTable;
+
+    private BookTableModel compModel;
+    private JScrollPane compScroll;
+    private JPanel compPanel;
+
+    String[] db = {
+            " ",
+            "smartphones",
+            "computers",
+            "televisions"
+    };
 
     Container container = getContentPane();
     JLabel dbLabel = new JLabel("DBNAME");
     JLabel nameLabel = new JLabel("NAME");
     JLabel priceLabel = new JLabel("PRICE");
 
-    JTextField dbTextField=new JTextField();
+    JComboBox dbComboBox = new JComboBox(db);
     JTextField nameField=new JTextField();
     JTextField priceField=new JTextField();
 
@@ -80,7 +95,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         nameLabel.setBounds(50,220,100,30);
         priceLabel.setBounds(50,290,100,30);
 
-        dbTextField.setBounds(150,150,150,30);
+        dbComboBox.setBounds(150,150,150,30);
         nameField.setBounds(150,220,150,30);
         priceField.setBounds(150,290,150,30);
 
@@ -96,7 +111,20 @@ public class AdminFrame extends JFrame implements ActionListener {
         container.add(nameLabel);
         container.add(priceLabel);
 
-        container.add(dbTextField);
+        container.add(dbComboBox);
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                if (dbComboBox.getSelectedItem() == "smartphones") {
+                    nameOfDb = "smartphones";
+                }
+                if (dbComboBox.getSelectedItem() == "computers") {
+                    nameOfDb = "computers";
+                }
+            }
+        };
+        dbComboBox.addActionListener(actionListener);
+
         container.add(nameField);
         container.add(priceField);
 
@@ -131,6 +159,7 @@ public class AdminFrame extends JFrame implements ActionListener {
 
             if (i == 1) {
 //                // Добавление вкладки
+                smartTable = bookTable1;
                 smartPanel = panel;
                 smart = bookTableModel1;
                 smartScroll = bookTableScrollPage1;
@@ -141,7 +170,9 @@ public class AdminFrame extends JFrame implements ActionListener {
             }
 
             if (i == 2) {
-
+                compPanel = panel;
+                compModel = bookTableModel1;
+                compScroll = bookTableScrollPage1;
                 // Добавление вкладки
                 tabsLeft.addTab("computers", panel);
                 panel.add(bookTableScrollPage1);
@@ -179,8 +210,9 @@ public class AdminFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == addButton) {
-            if (dbTextField.getText().equals("s")) {
-                System.out.println(nameField.getText());
+
+            if (nameOfDb.equals("smartphones")) {
+                System.out.println(nameOfDb);
                 try {
                     preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_SMART);
                     ResultSet res2 = preparedStatement2.executeQuery();
@@ -202,7 +234,7 @@ public class AdminFrame extends JFrame implements ActionListener {
                     String count = "1";
                     String price = priceField.getText();
 
-                    String []row = {Integer.toString(id), name, count, price};
+                    String[] row = {Integer.toString(id), name, count, price};
 
                     smartPanel.add(smartScroll);
                     smart.addData(row);
@@ -212,18 +244,70 @@ public class AdminFrame extends JFrame implements ActionListener {
                     ex.printStackTrace();
                     System.out.println("error");
                 }
-            }
 
+            } else if (nameOfDb.equals("computers")) {
+                System.out.println(nameOfDb);
+                try {
+                    preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_COMPUTERS);
+                    ResultSet res2 = preparedStatement2.executeQuery();
+
+                    while (res2.next()) {
+                        idGoods = res2.getInt(1);
+                    }
+                    idGoods++;
+
+                    preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_COMPUTER);
+                    preparedStatement.setInt(1, idGoods);
+                    preparedStatement.setString(2, nameField.getText());
+                    preparedStatement.setString(3, "1");
+                    preparedStatement.setString(4, priceField.getText());
+                    preparedStatement.execute();
+
+                    int id = idGoods;
+                    String name = nameField.getText();
+                    String count = "1";
+                    String price = priceField.getText();
+
+                    String[] row = {Integer.toString(id), name, count, price};
+
+                    compPanel.add(compScroll);
+                    compModel.addData(row);
+                    //smart.addDataSmartPhones(connect);
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("error");
+                }
+
+            }
 
 
         }
        // }
 
         if (e.getSource() == resetButton) {
-
+            priceField.setText("");
+            nameField.setText("");
+            dbComboBox.setSelectedIndex(0);
         }
 
         if (e.getSource() == deleteButton) {
+
+            if (nameOfDb.equals("smartphones")) {
+
+                smartTable.getSelectedRows();
+                System.out.println(smartTable.getSelectedRow());
+
+            }
+
+            try {
+                preparedStatement3 = connect.getConnection().prepareStatement(DELETE);
+                preparedStatement3.setInt(1, 1); // id: 1, name: Name, age: 33, email: wfew
+                preparedStatement3.executeUpdate();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
 
         }
 

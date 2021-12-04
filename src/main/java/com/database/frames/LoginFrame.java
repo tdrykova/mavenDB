@@ -226,7 +226,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 AdminFrame adminFrame = new AdminFrame();
                 adminFrame.setTitle("Admin Form");
                 adminFrame.setVisible(true);
-                adminFrame.setBounds(10,10,1000,1000);
+                adminFrame.setBounds(10,10,1300,800);
                 adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                // adminFrame.setResizable(false);
 

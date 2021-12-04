@@ -12,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class AdminFrame extends JFrame implements ActionListener {
@@ -22,6 +25,17 @@ public class AdminFrame extends JFrame implements ActionListener {
     private  final  String   TEMPL_button  = "Кнопка %d";
     private  final  String   TEMPL_tab     = "Вкладка %d";
 
+    private static final String INSERT_NEW_SMARTPHONE = "INSERT INTO smartphones VALUES (?, ?, ?, ?)";
+    private static final String GET_ALL_SMART = "SELECT * FROM smartphones";
+    PreparedStatement preparedStatement = null;
+    PreparedStatement preparedStatement2 = null;
+    ConnectionDb connect = new ConnectionDb();
+    private int idGoods = 20;
+
+    public BookTableModel smart;
+    public JScrollPane smartScroll;
+    public JPanel smartPanel;
+
     Container container = getContentPane();
     JLabel dbLabel = new JLabel("DBNAME");
     JLabel nameLabel = new JLabel("NAME");
@@ -31,7 +45,7 @@ public class AdminFrame extends JFrame implements ActionListener {
     JTextField nameField=new JTextField();
     JTextField priceField=new JTextField();
 
-    JButton addButton=new JButton("ADD");
+    JButton addButton = new JButton("ADD");
     JButton deleteButton=new JButton("DELETE");
     JButton resetButton=new JButton("RESET");
 
@@ -45,6 +59,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
+        addActionEvent();
        // new TabbedPaneTemplate();
 
     }
@@ -52,6 +67,13 @@ public class AdminFrame extends JFrame implements ActionListener {
     {
         container.setLayout(null);
     }
+
+    public void addActionEvent() {
+        addButton.addActionListener(this);
+        deleteButton.addActionListener(this);
+        resetButton.addActionListener(this);
+    }
+
     public void setLocationAndSize()
     {
         dbLabel.setBounds(50,150,100,30);
@@ -66,7 +88,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         deleteButton.setBounds(200,350,100,30);
         addButton.setBounds(350,350,100,30);
 
-        tabsLeft.setBounds(350,350,800,800);
+        tabsLeft.setBounds(600,100,500,500);
     }
     public void addComponentsToContainer()
     {
@@ -83,7 +105,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         container.add(addButton);
 
 
-        ConnectionDb connect = new ConnectionDb();
+
 
         // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -99,14 +121,19 @@ public class AdminFrame extends JFrame implements ActionListener {
             // Добавление вкладки
             tabsLeft.addTab(String.format(TEMPL_tab, i), panel);
 
+            BookTableModel bookTableModel1 = new BookTableModel();
+            JTable bookTable1 = new JTable(bookTableModel1);
+            JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
+            bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
+
+
+
 
             if (i == 1) {
-                BookTableModel bookTableModel1 = new BookTableModel();
-                JTable bookTable1 = new JTable(bookTableModel1);
-                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
-                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
-
-                // Добавление вкладки
+//                // Добавление вкладки
+                smartPanel = panel;
+                smart = bookTableModel1;
+                smartScroll = bookTableScrollPage1;
                 tabsLeft.addTab("smartphones", panel);
                 panel.add(bookTableScrollPage1);
                 bookTableModel1.addDataSmartPhones(connect);
@@ -114,10 +141,6 @@ public class AdminFrame extends JFrame implements ActionListener {
             }
 
             if (i == 2) {
-                BookTableModel bookTableModel1 = new BookTableModel();
-                JTable bookTable1 = new JTable(bookTableModel1);
-                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
-                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
 
                 // Добавление вкладки
                 tabsLeft.addTab("computers", panel);
@@ -155,13 +178,63 @@ public class AdminFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        if (e.getSource() == addButton) {
+            if (dbTextField.getText().equals("s")) {
+                System.out.println(nameField.getText());
+                try {
+                    preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_SMART);
+                    ResultSet res2 = preparedStatement2.executeQuery();
+
+                    while (res2.next()) {
+                        idGoods = res2.getInt(1);
+                    }
+                    idGoods++;
+
+                    preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_SMARTPHONE);
+                    preparedStatement.setInt(1, idGoods);
+                    preparedStatement.setString(2, nameField.getText());
+                    preparedStatement.setString(3, "1");
+                    preparedStatement.setString(4, priceField.getText());
+                    preparedStatement.execute();
+
+                    int id = idGoods;
+                    String name = nameField.getText();
+                    String count = "1";
+                    String price = priceField.getText();
+
+                    String []row = {Integer.toString(id), name, count, price};
+
+                    smartPanel.add(smartScroll);
+                    smart.addData(row);
+                    //smart.addDataSmartPhones(connect);
+
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("error");
+                }
+            }
+
+
+
+        }
+       // }
+
+        if (e.getSource() == resetButton) {
+
+        }
+
+        if (e.getSource() == deleteButton) {
+
+        }
+
     }
 
     public void addNewGoods() {
 
 
-
     }
+
+
 
 
 }

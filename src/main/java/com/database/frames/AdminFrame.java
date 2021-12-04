@@ -7,6 +7,8 @@ import com.database.templates.TabbedPaneTemplate;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.PreparedStatement;
@@ -26,7 +28,7 @@ public class AdminFrame extends JFrame implements ActionListener {
     private static final String GET_ALL_SMART = "SELECT * FROM smartphones";
     private static final String INSERT_NEW_COMPUTER = "INSERT INTO computers VALUES (?, ?, ?, ?)";
     private static final String GET_ALL_COMPUTERS = "SELECT * FROM computers";
-    private static final String DELETE = "SELECT * FROM smartphones WHERE id = ?";
+    private static final String DELETE_SMART = "SELECT * FROM smartphones WHERE id = ?";
 
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
@@ -278,10 +280,7 @@ public class AdminFrame extends JFrame implements ActionListener {
                     ex.printStackTrace();
                     System.out.println("error");
                 }
-
             }
-
-
         }
        // }
 
@@ -295,30 +294,40 @@ public class AdminFrame extends JFrame implements ActionListener {
 
             if (nameOfDb.equals("smartphones")) {
 
-                smartTable.getSelectedRows();
-                System.out.println(smartTable.getSelectedRow());
+
+                TableModel modelFirst = smartTable.getModel();
+                int ind = smartTable.getSelectedRow();
+
+               String [] row = new String[4];
+
+                // modelSecond = (DefaultTableModel)defTable.getModel();
+
+                //for (int i = 0; i < index; i++) {
+                //  countAddGoods++;
+                row[0] = String.valueOf(modelFirst.getValueAt(ind, 0));
+                // row[0] = countAddGoods;
+                row[1] = String.valueOf(modelFirst.getValueAt(ind, 1));
+                row[2] = String.valueOf(modelFirst.getValueAt(ind, 2));
+                row[3] = String.valueOf(modelFirst.getValueAt(ind, 3));
+                //  row[4] = modelFirst.getValueAt(index, 4);
+                System.out.println(row[0]);
+
+                try {
+                    preparedStatement3 = connect.getConnection().prepareStatement(DELETE_SMART);
+                    preparedStatement3.setInt(1, Integer.parseInt(row[0])); // id: 1, name: Name, age: 33, email: wfew
+                  //  preparedStatement3.executeQuery();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("no delete");
+                }
+
+                // }
+
 
             }
 
-            try {
-                preparedStatement3 = connect.getConnection().prepareStatement(DELETE);
-                preparedStatement3.setInt(1, 1); // id: 1, name: Name, age: 33, email: wfew
-                preparedStatement3.executeUpdate();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-
-
-        }
-
     }
 
-    public void addNewGoods() {
-
-
     }
-
-
-
 
 }

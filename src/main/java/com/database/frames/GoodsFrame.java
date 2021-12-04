@@ -13,11 +13,11 @@ import java.awt.event.*;
 
 public class GoodsFrame extends JFrame {
 
-    private final Color[] colors = {Color.cyan, Color.orange};
+    private final Color[] colors = {Color.cyan, Color.orange, Color.orange};
     private final String TEMPL_label = "Метка %d";
     private final String TEMPL_dynamic = "Динамическая метка %d";
     private int clicksCount = 0;
-    private int countBuy = 0;
+    private int countAddGoods = 0;
 
     private static final String GET_ALL_SMARTPHONES = "SELECT * FROM smartphones";
     private static final String INSERT = "INSERT image INTO smartphones VALUES(?)";
@@ -35,19 +35,18 @@ public class GoodsFrame extends JFrame {
 
         JPanel panel1 = new JPanel();
         panel1.setSize(200,100);
-
         DefaultTableModel defTableModel = new DefaultTableModel(array2, columnsHeader);
         JTable defTable = new JTable(defTableModel);
-
         panel1.add(defTable);
+
         JScrollPane bookTableScrollPage = new JScrollPane(defTable); // что прокрутить
         bookTableScrollPage.setPreferredSize(new Dimension(400, 100));
-
         JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
         panel1.setVisible(true);
 
        // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         // Левая панель со вкладками
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -64,6 +63,9 @@ public class GoodsFrame extends JFrame {
             btnMinus.setText("-");
             btnPlus.setText("+");
             btnAdd.setText("Add");
+//            btnAdd.setEnabled(false);
+//            btnMinus.setEnabled(false);
+//            btnPlus.setEnabled(false);
             panel.add(btnMinus);
             panel.add(countLabel);
             panel.add(btnPlus);
@@ -98,6 +100,15 @@ public class GoodsFrame extends JFrame {
                 JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
                 bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
 
+//                if (bookTable1.getSelectedRow() >=0 ) {
+//                    btnAdd.setEnabled(true);
+//                    btnMinus.setEnabled(true);
+//                }
+//
+//                if (countLabel.getText() != "0") {
+//                        btnAdd.setEnabled(true);
+//                    }
+
                 // Добавление вкладки
                 tabsLeft.addTab("smartphones", panel);
 
@@ -112,14 +123,16 @@ public class GoodsFrame extends JFrame {
                     modelSecond = (DefaultTableModel)defTable.getModel();
 
                     for (int i = 0; i < indexs.length; i++) {
-                        row[0] = modelFirst.getValueAt(indexs[i], 0);
+                      //  countAddGoods++;
+                 row[0] = modelFirst.getValueAt(indexs[i], 0);
+                       // row[0] = countAddGoods;
                         row[1] = modelFirst.getValueAt(indexs[i], 1);
                         row[2] = Integer.parseInt(countLabel.getText());
                         row[3] = modelFirst.getValueAt(indexs[i], 3);
                         row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
 
-                        String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
-                                + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
+//                        String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
+//                                + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
                         if (countLabel.getText() != "0") {
                             modelSecond.addRow(row);
                         }
@@ -128,7 +141,6 @@ public class GoodsFrame extends JFrame {
                     countLabel.setText("0");
                 }});
 
-               // panel.add(bookTableScrollPage1);
                 panel.add(bookTableScrollPage1);
                 bookTableModel1.addDataSmartPhones(connect);
             }
@@ -141,34 +153,37 @@ public class GoodsFrame extends JFrame {
 
                 // Добавление вкладки
                 tabsLeft.addTab("computers", panel);
+                panel.add(bookTableScrollPage1);
+                bookTableModel1.addDataComputers(connect);
 
                 btnAdd.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
 
                         TableModel modelFirst = bookTable1.getModel();
-                        int indexs[] = bookTable1.getSelectedRows();
+                        int[] indexs = bookTable1.getSelectedRows();
 
                         Object[] row = new Object[5];
 
                         modelSecond = (DefaultTableModel)defTable.getModel();
 
                         for (int i = 0; i < indexs.length; i++) {
-                            row[0] = modelFirst.getValueAt(indexs[i], 0);
+                       //     countAddGoods++;
+                     //       row[0] = countAddGoods;
+                           row[0] = modelFirst.getValueAt(indexs[i], 0);
                             row[1] = modelFirst.getValueAt(indexs[i], 1);
                             row[2] = Integer.parseInt(countLabel.getText());
                             row[3] = modelFirst.getValueAt(indexs[i], 3);
                             row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
 
-                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
-                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
-                            if (clicksCount > 0) {
+//                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
+//                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
+                            if (countLabel.getText() != "0") {
                                 modelSecond.addRow(row);
                             }
                         }
+                        countLabel.setText("0");
                     }});
 
-                panel.add(bookTableScrollPage1);
-                bookTableModel1.addDataComputers(connect);
             }
         }
 
@@ -231,7 +246,9 @@ public class GoodsFrame extends JFrame {
                 int rows = modelSecond.getRowCount();
 
                 for (int i = 0; i < rows; i++) {
-                    row[0] = modelSecond.getValueAt(i, 0);
+                    countAddGoods++;
+//                    row[0] = modelSecond.getValueAt(i, 0);
+                    row[0] = countAddGoods;
                     row[1] = modelSecond.getValueAt(i, 1);
                     row[2] = modelSecond.getValueAt(i, 3);
                     row[3] = modelSecond.getValueAt(i, 3);

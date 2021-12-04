@@ -1,6 +1,7 @@
 package com.database.frames;
 
 import com.database.openedu.ConnectionDb;
+import com.database.templates.TabbedPaneTemplate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,28 +25,26 @@ public class LoginFrame extends JFrame implements ActionListener {
     ConnectionDb connect = new ConnectionDb();
     int countUsers = 0;
 
-//    String[] customer = {
-//            "Usual",
-//            "Vip"
-//    };
+    String[] person = {
+            " ",
+            "User",
+            "Admin"
+    };
 
     Container container = getContentPane();
-    JLabel userLabel = new JLabel("USERNAME");
-    //JLabel numberOfDiscCardLabel = new JLabel("SALE CARD");
+    JLabel statusLabel = new JLabel("STATUS");
+    JLabel userLabel = new JLabel("NAME");
     JLabel numberOfPhoneLabel = new JLabel("PHONE NUM");
-//    JLabel emailAddressLabel = new JLabel("E-MAIL");
-    //JLabel customerLabel = new JLabel("CUSTOMER");
-    JLabel discountLabel = new JLabel("DISCOUNT");
+    JLabel passwordLabel = new JLabel("PASSWORD");
 
+    JComboBox stateOfPerson = new JComboBox(person);
     JTextField userTextField = new JTextField();
-   // JComboBox customerState = new JComboBox(customer);
     JTextField phoneTextField = new JTextField();
-//    JTextField emailTextField = new JTextField();
+    JPasswordField passwordTextField = new JPasswordField();
 
-//    JLabel discountPercentage = new JLabel("0");
-    JButton loginButton = new JButton("LOGIN");
+
+    JButton loginButton = new JButton("ENTER");
     JButton resetButton = new JButton("RESET");
-
 
     LoginFrame() {
         setLayoutManager();
@@ -59,25 +58,85 @@ public class LoginFrame extends JFrame implements ActionListener {
     }
 
     public void setLocationAndSize() {
-        userLabel.setBounds(50, 150, 100, 30);
-        numberOfPhoneLabel.setBounds(50, 220, 100, 30);
-//        emailAddressLabel.setBounds(50, 290, 100, 30);
-//        discountLabel.setBounds(50, 360, 100, 30);
+        statusLabel.setBounds(50, 150, 100, 30);
+        userLabel.setBounds(50, 220, 100, 30);
 
-        userTextField.setBounds(150, 150, 150, 30);
-        phoneTextField.setBounds(150, 220, 150, 30);
-//        emailTextField.setBounds(150, 290, 150, 30);
-//        discountPercentage.setBounds(150, 360, 150, 30);
+        numberOfPhoneLabel.setBounds(50, 290, 100, 30);
+        numberOfPhoneLabel.setVisible(false);
+        passwordLabel.setBounds(50, 290, 100, 30);
+        passwordLabel.setVisible(false);
+
+        stateOfPerson.setBounds(150, 150, 150, 30);
+        userTextField.setBounds(150, 220, 150, 30);
+
+        phoneTextField.setBounds(150, 290, 150, 30);
+        phoneTextField.setVisible(false);
+        passwordTextField.setBounds(150, 290, 150, 30);
+        passwordTextField.setVisible(false);
 
         loginButton.setBounds(200, 440, 100, 30);
         resetButton.setBounds(50, 440, 100, 30);
     }
 
     public void addComponentsToContainer() {
+        container.add(statusLabel);
         container.add(userLabel);
         container.add(numberOfPhoneLabel);
-//        container.add(emailAddressLabel);
-//        container.add(discountLabel);
+        container.add(passwordLabel);
+
+
+        container.add(stateOfPerson);
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (stateOfPerson.getSelectedItem() == "User") {
+                    phoneTextField.setVisible(true);
+                    numberOfPhoneLabel.setVisible(true);
+                    passwordTextField.setVisible(false);
+                    passwordLabel.setVisible(false);
+                    phoneTextField.addKeyListener(new KeyAdapter() {
+                        public void keyTyped(KeyEvent e) {
+                            if (!Character.isDigit(e.getKeyChar()))
+                                e.consume();
+                        }
+                    });
+                    phoneTextField.addKeyListener(new KeyAdapter() {
+                        public void keyTyped(KeyEvent e) {
+                            if (phoneTextField.getText().length() >= 11 ) // limit textfield to 11 characters
+                                e.consume();
+                        }
+                    });
+                }
+
+                if (stateOfPerson.getSelectedItem() == "Admin") {
+                    passwordTextField.setVisible(true);
+                    passwordLabel.setVisible(true);
+                    phoneTextField.setVisible(false);
+                    numberOfPhoneLabel.setVisible(false);
+                    passwordTextField.addKeyListener(new KeyAdapter() {
+                        public void keyTyped(KeyEvent e) {
+                            if (!Character.isDigit(e.getKeyChar()))
+                                e.consume();
+                        }
+                    });
+                    phoneTextField.addKeyListener(new KeyAdapter() {
+                        public void keyTyped(KeyEvent e) {
+                            if (passwordTextField.getText().length() >= 11 ) // limit textfield to 11 characters
+                                e.consume();
+                        }
+                    });
+                }
+
+                if (stateOfPerson.getSelectedItem() == " ") {
+                    passwordTextField.setVisible(false);
+                    passwordLabel.setVisible(false);
+                    phoneTextField.setVisible(false);
+                    numberOfPhoneLabel.setVisible(false);
+                }
+
+            }
+        };
+        stateOfPerson.addActionListener(actionListener);
+
 
         container.add(userTextField);
         userTextField.addKeyListener(new KeyAdapter() {
@@ -93,29 +152,12 @@ public class LoginFrame extends JFrame implements ActionListener {
             }
         });
 
+
+
         container.add(phoneTextField);
-        phoneTextField.addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
-                if (!Character.isDigit(e.getKeyChar()))
-                    e.consume();
-            }
-        });
-        phoneTextField.addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
-                if (phoneTextField.getText().length() >= 11 ) // limit textfield to 11 characters
-                    e.consume();
-            }
-        });
 
-//        container.add(emailTextField);
-//        emailTextField.addKeyListener(new KeyAdapter() {
-//            public void keyTyped(KeyEvent e) {
-//                if (emailTextField.getText().length() >= 25 ) // limit textfield to 11 characters
-//                    e.consume();
-//            }
-//        });
+        container.add(passwordTextField);
 
-//        container.add(discountPercentage);
         container.add(loginButton);
         container.add(resetButton);
     }
@@ -128,46 +170,43 @@ public class LoginFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            int isNew = 0;
-            int isVip = 0;
-            int countUsers = 0;
 
-            try {
-                preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
-                ResultSet res2 = preparedStatement2.executeQuery();
+            if (stateOfPerson.getSelectedItem() == "User") {
+                int isNew = 0;
+                int isVip = 0;
+                int countUsers = 0;
 
-                while (res2.next() ) {
-                    countUsers = res2.getInt(1);
-                    int id = res2.getInt("id");
-                    String name = res2.getString("name");
-                    String phone = res2.getString("phone");
+                try {
+                    preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
+                    ResultSet res2 = preparedStatement2.executeQuery();
 
-                    if (userTextField.getText() == name && phoneTextField.getText() == phone) {
-                        isVip++;
-                        System.out.println(isVip);
-//                        JOptionPane.showMessageDialog(LoginFrame.this,
-//                                        "Вы наш Vip-клиент! Добро пожаловать в магазин");
+                    while (res2.next()) {
+                        countUsers = res2.getInt(1);
+                        int id = res2.getInt("id");
+                        String name = res2.getString("name");
+                        String phone = res2.getString("phone");
 
+                        if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
+                            isVip++;
+                            System.out.println(isVip);
+                            JOptionPane.showMessageDialog(LoginFrame.this,
+                                    "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
+                        }
                     }
-                } System.out.println(isVip);
-            } catch (SQLException es) {
-                es.printStackTrace();
-            }
+                } catch (SQLException es) {
+                    es.printStackTrace();
+                }
 
-            if (isVip == 0) {
+                if (isVip == 0) {
                     isNew++;
                     try {
-                        //Statement stmt = connect.getConnection().createStatement();
-                       // ResultSet rs = stmt.executeQuery(GET_COUNT_USERS);
-
                         countUsers++;
                         System.out.println(countUsers);
 
                         preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_USER);
-                        preparedStatement.setInt(1,countUsers++);
-                        preparedStatement.setString(2,userTextField.getText());
-                        preparedStatement.setString(3,phoneTextField.getText());
-                        //preparedStatement.setString(4,emailTextField.getText());
+                        preparedStatement.setInt(1, countUsers++);
+                        preparedStatement.setString(2, userTextField.getText());
+                        preparedStatement.setString(3, phoneTextField.getText());
                         preparedStatement.execute();
 
                     } catch (SQLException ex) {
@@ -178,20 +217,30 @@ public class LoginFrame extends JFrame implements ActionListener {
 //                    JOptionPane.showMessageDialog(this, "Invalid Username");
 //                }
 
-            dispose();
-            new GoodsFrame();
+                dispose();
+                new GoodsFrame();
+            }
+
+            else {
+                dispose();
+                AdminFrame adminFrame = new AdminFrame();
+                adminFrame.setTitle("Admin Form");
+                adminFrame.setVisible(true);
+                adminFrame.setBounds(10,10,1000,1000);
+                adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+               // adminFrame.setResizable(false);
+
+            }
+
+
         }
 
         if (e.getSource() == resetButton) {
             userTextField.setText("");
             phoneTextField.setText("");
-           // emailTextField.setText("");
-           // cardTextField.setText("");
+            passwordTextField.setText("");
         }
-
         }
-
-
     }
 
 

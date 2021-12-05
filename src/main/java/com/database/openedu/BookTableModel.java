@@ -1,6 +1,7 @@
 package com.database.openedu;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,6 +53,29 @@ public class BookTableModel extends AbstractTableModel {
         String []rowTable = new String[getColumnCount()];
         rowTable = row;
         dataArrayList.add(rowTable);
+    }
+//
+//    public void removeAll(int row) {
+//        dataArrayList.remove(row);
+//        fireTableRowsDeleted(row,row);
+//    }
+
+    public void removeAll(){
+        int size = dataArrayList.size();
+        dataArrayList.clear();
+        fireTableRowsDeleted(0, size);
+    }
+
+    public void deleteData(String []row) {
+        String []rowTable = new String[getColumnCount()];
+        rowTable = row;
+        dataArrayList.remove(rowTable);
+    }
+
+
+    public void deleteData(int row) {
+        String []rowTable = new String[getColumnCount()];
+        dataArrayList.remove(row);
     }
 
     public void addDataUsers(ConnectionDb connect) {

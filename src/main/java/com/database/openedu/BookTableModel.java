@@ -66,17 +66,17 @@ public class BookTableModel extends AbstractTableModel {
         fireTableRowsDeleted(0, size);
     }
 
-    public void deleteData(String []row) {
-        String []rowTable = new String[getColumnCount()];
-        rowTable = row;
-        dataArrayList.remove(rowTable);
-    }
+//    public void deleteData(String []row) {
+//        String []rowTable = new String[getColumnCount()];
+//        rowTable = row;
+//        dataArrayList.remove(rowTable);
+//    }
 
-
-    public void deleteData(int row) {
-        String []rowTable = new String[getColumnCount()];
-        dataArrayList.remove(row);
-    }
+//
+//    public void deleteData(int row) {
+//        String []rowTable = new String[getColumnCount()];
+//        dataArrayList.remove(row);
+//    }
 
     public void addDataUsers(ConnectionDb connect) {
         ResultSet result = connect.resultSetQuery("SELECT * FROM users");
@@ -131,6 +131,27 @@ public class BookTableModel extends AbstractTableModel {
                 String price = result.getString("price");
 
                 String []row = {id, name, count, price};
+
+                addData(row);
+            }
+            // do smth else
+            result.close();
+        } catch (SQLException e) {
+            System.out.println("add data isn't worked");
+        }
+    }
+
+    public void addDataTv(ConnectionDb connect) {
+        ResultSet result = connect.resultSetQuery("SELECT * FROM tv");
+
+        try {
+            while (result.next()) {
+                String id = result.getString("id");
+                String name = result.getString("name");
+                String count = result.getString("count");
+                String email = result.getString("price");
+
+                String []row = {id, name, count, email};
 
                 addData(row);
             }

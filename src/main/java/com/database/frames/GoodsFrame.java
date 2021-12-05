@@ -14,6 +14,7 @@ import java.awt.event.*;
 public class GoodsFrame extends JFrame {
 
     private final Color[] colors = {Color.cyan, Color.orange, Color.orange};
+    private final int countDb = 3;
     private final String TEMPL_label = "Метка %d";
     private final String TEMPL_dynamic = "Динамическая метка %d";
     private int clicksCount = 0;
@@ -51,7 +52,7 @@ public class GoodsFrame extends JFrame {
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
         // Создание вкладок
-        for (int i = 1; i < colors.length + 1; i++) {
+        for (int i = 1; i <= countDb; i++) {
             JPanel panel = new JPanel();
             // Размещение метки во вкладке
             panel.add(new JLabel(String.format(TEMPL_label, i)));
@@ -183,7 +184,46 @@ public class GoodsFrame extends JFrame {
                         }
                         countLabel.setText("0");
                     }});
+            }
 
+            if (i == 3) {
+                BookTableModel bookTableModel1 = new BookTableModel();
+                JTable bookTable1 = new JTable(bookTableModel1);
+                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
+                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
+
+                // Добавление вкладки
+                tabsLeft.addTab("tv", panel);
+                panel.add(bookTableScrollPage1);
+                bookTableModel1.addDataTv(connect);
+
+                btnAdd.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+
+                        TableModel modelFirst = bookTable1.getModel();
+                        int[] indexs = bookTable1.getSelectedRows();
+
+                        Object[] row = new Object[5];
+
+                        modelSecond = (DefaultTableModel)defTable.getModel();
+
+                        for (int i = 0; i < indexs.length; i++) {
+                            //     countAddGoods++;
+                            //       row[0] = countAddGoods;
+                            row[0] = modelFirst.getValueAt(indexs[i], 0);
+                            row[1] = modelFirst.getValueAt(indexs[i], 1);
+                            row[2] = Integer.parseInt(countLabel.getText());
+                            row[3] = modelFirst.getValueAt(indexs[i], 3);
+                            row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
+
+//                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
+//                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
+                            if (countLabel.getText() != "0") {
+                                modelSecond.addRow(row);
+                            }
+                        }
+                        countLabel.setText("0");
+                    }});
             }
         }
 

@@ -16,7 +16,6 @@ public class GoodsFrame extends JFrame {
     private final Color[] colors = {Color.cyan, Color.orange, Color.orange};
     private final int countDb = 3;
     private final String TEMPL_label = "Метка %d";
-    private final String TEMPL_dynamic = "Динамическая метка %d";
     private int clicksCount = 0;
     private int countAddGoods = 0;
 
@@ -28,9 +27,11 @@ public class GoodsFrame extends JFrame {
     private DefaultTableModel modelSecond;
     //private DefaultTableModel defTableModel;
     private Object[][] array2 = {};
+    Container container = getContentPane();
     // Заголовки столбцов
 
     public GoodsFrame() {
+
 
         ConnectionDb connect = new ConnectionDb();
 
@@ -235,7 +236,7 @@ public class GoodsFrame extends JFrame {
                 // Количество компонентов в панели
                 int count = panel.getComponentCount();
                 // Добавление на вкладку новой метки
-                panel.add(new JLabel(String.format(TEMPL_dynamic, count)));
+               // panel.add(new JLabel(String.format(TEMPL_dynamic, count)));
             }
         });
 
@@ -309,15 +310,21 @@ public class GoodsFrame extends JFrame {
             }});
 
         // Определение табличного расположения компонентов
-        getContentPane().setLayout(new GridLayout(4,2));
+        //container.setLayout(new GridLayout(5,3));
+        container.setLayout(new FlowLayout(FlowLayout.CENTER));
+        //container.setLayout(null);
         // Добавление вкладок в панель содержимого
-       getContentPane().add(tabsLeft);
-       getContentPane().add(bookTableScrollPage);
-       getContentPane().add(btnGoToCashier);
-       getContentPane().add(btnDeleteGoods);
+       container.add(tabsLeft);
+       container.add(bookTableScrollPage);
+       container.add(btnGoToCashier);
+       container.add(btnDeleteGoods);
         // Вывод окна на экран
         setSize(800, 600);
         setVisible(true);
     }
+
+
+
+
 }
 

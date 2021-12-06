@@ -2,9 +2,16 @@ package com.database.Person;
 
 public abstract class AbstractPerson implements PersonInterface {
 
-    String name;
+    private String name;
 
-    public void setName() {
+    public AbstractPerson() {
+    }
+
+    public AbstractPerson(String name) {
+        this.name = name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -20,4 +27,5 @@ public abstract class AbstractPerson implements PersonInterface {
 
     }
 
+   // public abstract void setName(String text);
 }

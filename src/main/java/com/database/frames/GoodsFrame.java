@@ -2,6 +2,7 @@ package com.database.frames;
 
 import com.database.openedu.BookTableModel;
 import com.database.openedu.ConnectionDb;
+import com.database.Person.User;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -65,7 +66,7 @@ public class GoodsFrame extends JFrame {
             btnMinus.setText("-");
             btnPlus.setText("+");
             btnAdd.setText("Add");
-//            btnAdd.setEnabled(false);
+           // btnAdd.setEnabled(false);
 //            btnMinus.setEnabled(false);
 //            btnPlus.setEnabled(false);
             panel.add(btnMinus);
@@ -135,9 +136,9 @@ public class GoodsFrame extends JFrame {
 
 //                        String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
 //                                + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
-                        if (countLabel.getText() != "0") {
+                        if (!countLabel.getText().equals("0")) {
                             modelSecond.addRow(row);
-                        }
+                        } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
 
                     }
                     countLabel.setText("0");
@@ -158,6 +159,8 @@ public class GoodsFrame extends JFrame {
                 panel.add(bookTableScrollPage1);
                 bookTableModel1.addDataComputers(connect);
 
+//                if (!countLabel.getText().equals("0"))
+//                    btnAdd.setEnabled(true);
                 btnAdd.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
 
@@ -179,9 +182,9 @@ public class GoodsFrame extends JFrame {
 
 //                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
 //                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
-                            if (countLabel.getText() != "0") {
+                            if (!countLabel.getText().equals("0")) {
                                 modelSecond.addRow(row);
-                            }
+                            } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
                         }
                         countLabel.setText("0");
                     }});
@@ -208,21 +211,19 @@ public class GoodsFrame extends JFrame {
 
                         modelSecond = (DefaultTableModel)defTable.getModel();
 
-                        for (int i = 0; i < indexs.length; i++) {
-                            //     countAddGoods++;
-                            //       row[0] = countAddGoods;
-                            row[0] = modelFirst.getValueAt(indexs[i], 0);
-                            row[1] = modelFirst.getValueAt(indexs[i], 1);
+                            int i = indexs.length;
+                            row[0] = modelFirst.getValueAt(i, 0);
+                            row[1] = modelFirst.getValueAt(i, 1);
                             row[2] = Integer.parseInt(countLabel.getText());
-                            row[3] = modelFirst.getValueAt(indexs[i], 3);
+                            row[3] = modelFirst.getValueAt(i, 3);
                             row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
 
 //                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
 //                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
-                            if (countLabel.getText() != "0") {
-                                modelSecond.addRow(row);
-                            }
-                        }
+                        if (!countLabel.getText().equals("0")) {
+                            modelSecond.addRow(row);
+                        } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
+
                         countLabel.setText("0");
                     }});
             }
@@ -251,56 +252,56 @@ public class GoodsFrame extends JFrame {
 
         JButton btnGoToCashier = new JButton();
         btnGoToCashier.setText("Go to a cash");
-        btnGoToCashier.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                JFrame f = new JFrame("textfield");
-                f.setLayout(new BorderLayout());
-
-                JPanel panel1 = new JPanel();
-                JPanel panel2 = new JPanel();
-
-                // create a new button
-                JButton b = new JButton("submit");
-                b.setText("Get a SMS-check");
-                b.setSize(new Dimension(10,20));
-
-                JTextArea checkTextArea = new JTextArea(25,5);
-//                checkTextArea.setText(checkTextArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
-                checkTextArea.setText("================  TECHNO POINT  ================\n" + "  NUM       GOODS             PRICE          QUANTITY           TOTAL    \n");
-                JScrollPane scrollPane = new JScrollPane(checkTextArea);
-                scrollPane.setSize(600, 400);
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-                panel1.add(checkTextArea);
-                panel2.add(b);
-
-                f.add(panel1, BorderLayout.NORTH);
-                f.add(panel2, BorderLayout.CENTER);
-
-                f.setSize(600, 500);
-                f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-
-                Object[] row = new Object[5];
-                int cols = modelSecond.getColumnCount();
-                int rows = modelSecond.getRowCount();
-
-                for (int i = 0; i < rows; i++) {
-                    countAddGoods++;
-//                    row[0] = modelSecond.getValueAt(i, 0);
-                    row[0] = countAddGoods;
-                    row[1] = modelSecond.getValueAt(i, 1);
-                    row[2] = modelSecond.getValueAt(i, 3);
-                    row[3] = modelSecond.getValueAt(i, 3);
-                    row[4] = modelSecond.getValueAt(i, 4);
-
-                    String item = "   " + row[0] + "               " + row[1] + "            " + row[2]  + "           " + row[3] + "        " + row[4];
-                    checkTextArea.append(item + "\n");
-                    item = "";
-                }
-                f.setVisible(true);
-            }});
+//        btnGoToCashier.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//
+//                JFrame f = new JFrame("textfield");
+//                f.setLayout(new BorderLayout());
+//
+//                JPanel panel1 = new JPanel();
+//                JPanel panel2 = new JPanel();
+//
+//                // create a new button
+//                JButton b = new JButton("submit");
+//                b.setText("Get a SMS-check");
+//                b.setSize(new Dimension(10,20));
+//
+//                JTextArea checkTextArea = new JTextArea(25,5);
+////                checkTextArea.setText(checkTextArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+//                checkTextArea.setText("================  TECHNO POINT  ================\n" + "  NUM       GOODS             PRICE          QUANTITY           TOTAL    \n");
+//                JScrollPane scrollPane = new JScrollPane(checkTextArea);
+//                scrollPane.setSize(600, 400);
+//                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//
+//                panel1.add(checkTextArea);
+//                panel2.add(b);
+//
+//                f.add(panel1, BorderLayout.NORTH);
+//                f.add(panel2, BorderLayout.CENTER);
+//
+//                f.setSize(600, 500);
+//                f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//
+//
+//                Object[] row = new Object[5];
+//                int cols = modelSecond.getColumnCount();
+//                int rows = modelSecond.getRowCount();
+//
+//                for (int i = 0; i < rows; i++) {
+//                    countAddGoods++;
+////                    row[0] = modelSecond.getValueAt(i, 0);
+//                    row[0] = countAddGoods;
+//                    row[1] = modelSecond.getValueAt(i, 1);
+//                    row[2] = modelSecond.getValueAt(i, 3);
+//                    row[3] = modelSecond.getValueAt(i, 3);
+//                    row[4] = modelSecond.getValueAt(i, 4);
+//
+//                    String item = "   " + row[0] + "               " + row[1] + "            " + row[2]  + "           " + row[3] + "        " + row[4];
+//                    checkTextArea.append(item + "\n");
+//                    item = "";
+//                }
+//                f.setVisible(true);
+//            }});
 
         JButton btnDeleteGoods = new JButton();
         btnDeleteGoods.setText("Return selected goods");
@@ -309,8 +310,9 @@ public class GoodsFrame extends JFrame {
                 modelSecond.removeRow(defTable.getSelectedRow());
             }});
 
-        // Определение табличного расположения компонентов
-        //container.setLayout(new GridLayout(5,3));
+        JLabel nameLabel = new JLabel();
+        //nameLabel.setText(User.user.getName());
+
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
         //container.setLayout(null);
         // Добавление вкладок в панель содержимого

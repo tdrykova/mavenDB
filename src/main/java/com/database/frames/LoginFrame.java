@@ -1,7 +1,8 @@
 package com.database.frames;
 
+import com.database.Person.User;
+import com.database.User2;
 import com.database.openedu.ConnectionDb;
-import com.database.templates.TabbedPaneTemplate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,16 +13,17 @@ import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class LoginFrame extends JFrame implements ActionListener {
 
     private static final String INSERT_NEW_USER = "INSERT INTO users VALUES (?, ?, ?)";
     private static final String GET_ALL_USERS = "SELECT * FROM users";
-    private String GET_COUNT_USERS = "SELECT COUNT(*) FROM users";
-    private String IS_EXIST = "SELECT EXISTS(SELECT FROM table WHERE phone = 1)";
+
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
+
+    char[] str = new char[2];
+
     ConnectionDb connect = new ConnectionDb();
     int countUsers = 0;
 
@@ -34,14 +36,16 @@ public class LoginFrame extends JFrame implements ActionListener {
     Container container = getContentPane();
     JLabel statusLabel = new JLabel("STATUS");
     JLabel userLabel = new JLabel("NAME");
+    JLabel userHuntLabel = new JLabel("* No more than 10 characters");
     JLabel numberOfPhoneLabel = new JLabel("PHONE NUM");
+    JLabel numberOfPhoneHuntLabel = new JLabel("* Ex.: 89264543266");
     JLabel passwordLabel = new JLabel("PASSWORD");
+    JCheckBox showPassword = new JCheckBox("Show Password");
 
     JComboBox stateOfPerson = new JComboBox(person);
     JTextField userTextField = new JTextField();
     JTextField phoneTextField = new JTextField();
     JPasswordField passwordTextField = new JPasswordField();
-
 
     JButton loginButton = new JButton("ENTER");
     JButton resetButton = new JButton("RESET");
@@ -66,13 +70,18 @@ public class LoginFrame extends JFrame implements ActionListener {
         passwordLabel.setBounds(50, 290, 100, 30);
         passwordLabel.setVisible(false);
 
-        stateOfPerson.setBounds(150, 150, 150, 30);
-        userTextField.setBounds(150, 220, 150, 30);
+        stateOfPerson.setBounds(150, 150, 170, 30);
+        userTextField.setBounds(150, 220, 170, 30);
+        userHuntLabel.setBounds(150, 250, 170, 30);
 
-        phoneTextField.setBounds(150, 290, 150, 30);
+        phoneTextField.setBounds(150, 290, 170, 30);
         phoneTextField.setVisible(false);
-        passwordTextField.setBounds(150, 290, 150, 30);
+        numberOfPhoneHuntLabel.setBounds(150,320,170,30);
+        numberOfPhoneHuntLabel.setVisible(false);
+        passwordTextField.setBounds(150, 290, 170, 30);
         passwordTextField.setVisible(false);
+        showPassword.setBounds(150,320,170,30);
+        showPassword.setVisible(false);
 
         loginButton.setBounds(200, 440, 100, 30);
         resetButton.setBounds(50, 440, 100, 30);
@@ -91,8 +100,10 @@ public class LoginFrame extends JFrame implements ActionListener {
                 if (stateOfPerson.getSelectedItem() == "User") {
                     phoneTextField.setVisible(true);
                     numberOfPhoneLabel.setVisible(true);
+                    numberOfPhoneHuntLabel.setVisible(true);
                     passwordTextField.setVisible(false);
                     passwordLabel.setVisible(false);
+                    showPassword.setVisible(false);
                     phoneTextField.addKeyListener(new KeyAdapter() {
                         public void keyTyped(KeyEvent e) {
                             if (!Character.isDigit(e.getKeyChar()))
@@ -108,16 +119,20 @@ public class LoginFrame extends JFrame implements ActionListener {
                 }
 
                 if (stateOfPerson.getSelectedItem() == "Admin") {
+
                     passwordTextField.setVisible(true);
                     passwordLabel.setVisible(true);
+                    showPassword.setVisible(true);
                     phoneTextField.setVisible(false);
                     numberOfPhoneLabel.setVisible(false);
+                    numberOfPhoneHuntLabel.setVisible(false);
                     passwordTextField.addKeyListener(new KeyAdapter() {
                         public void keyTyped(KeyEvent e) {
-                            if (!Character.isDigit(e.getKeyChar()))
+                            if (Character.isDigit(e.getKeyChar()))
                                 e.consume();
                         }
                     });
+
                     phoneTextField.addKeyListener(new KeyAdapter() {
                         public void keyTyped(KeyEvent e) {
                             if (passwordTextField.getText().length() >= 11 ) // limit textfield to 11 characters
@@ -131,14 +146,15 @@ public class LoginFrame extends JFrame implements ActionListener {
                     passwordLabel.setVisible(false);
                     phoneTextField.setVisible(false);
                     numberOfPhoneLabel.setVisible(false);
+                    numberOfPhoneHuntLabel.setVisible(false);
                 }
 
             }
         };
         stateOfPerson.addActionListener(actionListener);
 
-
         container.add(userTextField);
+        container.add(userHuntLabel);
         userTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 if (Character.isDigit(e.getKeyChar()))
@@ -155,8 +171,11 @@ public class LoginFrame extends JFrame implements ActionListener {
 
 
         container.add(phoneTextField);
+        container.add(numberOfPhoneHuntLabel);
 
         container.add(passwordTextField);
+
+        container.add(showPassword);
 
         container.add(loginButton);
         container.add(resetButton);
@@ -165,11 +184,17 @@ public class LoginFrame extends JFrame implements ActionListener {
     public void addActionEvent() {
         loginButton.addActionListener(this);
         resetButton.addActionListener(this);
+        showPassword.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
+
+            phoneTextField.getText().getChars(0,2, str,0);
+            if (!userTextField.getText().isEmpty() &&
+                    phoneTextField.getText().length() == 11 && str[0] == '8'
+                    && str[1] == '9') {
 
             if (stateOfPerson.getSelectedItem() == "User") {
                 int isNew = 0;
@@ -198,6 +223,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 }
 
                 if (isVip == 0) {
+
                     isNew++;
                     try {
                         countUsers++;
@@ -209,10 +235,18 @@ public class LoginFrame extends JFrame implements ActionListener {
                         preparedStatement.setString(3, phoneTextField.getText());
                         preparedStatement.execute();
 
+                        User user = new User();
+                        user.setPhoneNumber(phoneTextField.getText());
+                        user.setName(userTextField.getText());
+                        System.out.println(user.getName());
+                        System.out.println(user.getPhoneNumber());
+
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
+
+
 //            else if (userTextField.bounds().isEmpty()){
 //                    JOptionPane.showMessageDialog(this, "Invalid Username");
 //                }
@@ -221,19 +255,34 @@ public class LoginFrame extends JFrame implements ActionListener {
                 new GoodsFrame();
             }
 
-            else {
-                dispose();
-                AdminFrame adminFrame = new AdminFrame();
-                adminFrame.setTitle("Admin Form");
-                adminFrame.setVisible(true);
-                adminFrame.setBounds(10,10,1300,800);
-                adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-               // adminFrame.setResizable(false);
-
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Name or Password");
             }
 
+            if (stateOfPerson.getSelectedItem() == "Admin") {
 
+                if (userTextField.getText().equalsIgnoreCase("Admin") &&
+                        passwordTextField.getText().equalsIgnoreCase("rroot")) {
+                    //JOptionPane.showMessageDialog(this, "Login Successful");
+                    dispose();
+                    AdminFrame adminFrame = new AdminFrame();
+                    adminFrame.setTitle("Admin Form");
+                    adminFrame.setVisible(true);
+                    adminFrame.setBounds(10,10,1300,800);
+                    adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    // adminFrame.setResizable(false);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Name or Password");
+                }
+            }
         }
+
+        if (e.getSource() == showPassword) {
+            if (showPassword.isSelected()) {
+                passwordTextField.setEchoChar((char) 0);
+            } else {
+                passwordTextField.setEchoChar('*');
+            }
 
         if (e.getSource() == resetButton) {
             userTextField.setText("");
@@ -242,5 +291,6 @@ public class LoginFrame extends JFrame implements ActionListener {
         }
         }
     }
+}
 
 

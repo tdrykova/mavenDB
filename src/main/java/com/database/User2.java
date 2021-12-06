@@ -1,20 +1,20 @@
 package com.database;
 
-public class User {
+public class User2 {
 
     private int id;
     private String username;
     private String password;
 
-    public User() {
+    public User2() {
     }
 
-    public User(String username, String password) {
+    public User2(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public User(int id, String username, String password) {
+    public User2(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;

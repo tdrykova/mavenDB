@@ -15,7 +15,7 @@ public class Main {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM usersnew");
 
             while (resultSet.next()) {
-                User user = new User();
+                User2 user = new User2();
                 user.setId(resultSet.getInt("id"));
                 user.setUsername(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));

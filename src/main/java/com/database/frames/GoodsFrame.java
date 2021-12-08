@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,6 +38,15 @@ public class GoodsFrame extends JFrame {
     private Object[][] array2 = {};
     Container container = getContentPane();
     private int finalSum = 0;
+
+    private static final String INSERT_NEW_GOODS = "INSERT INTO goods VALUES (?, ?, ?, ?, ?)";
+    private static final String GET_ALL_GOODS = "SELECT * FROM goods";
+
+    private static final String DELETE_GOODS = "DELETE FROM goods WHERE id = ? AND name = ?";
+
+    PreparedStatement preparedStatement3 = null;
+    PreparedStatement preparedStatement = null;
+    PreparedStatement preparedStatement2 = null;
 
     //public ArrayList<String []> dataArrayList;
  // public HashMap<String, String> mapOfGoods = new HashMap<String, String>();
@@ -66,6 +77,7 @@ public class GoodsFrame extends JFrame {
        // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        String keyPhone = LoginFrame.phoneTextField.getText();
         // Левая панель со вкладками
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -114,7 +126,7 @@ public class GoodsFrame extends JFrame {
             label.setLocation(500, 500);
             panel.add(label);
             // ключ бд товаров, выбранных пользователем
-            String keyPhone = LoginFrame.phoneTextField.getText();
+//            String keyPhone = LoginFrame.phoneTextField.getText();
             if (i == 1) {
                 BookTableModel bookTableModel1 = new BookTableModel();
                 JTable bookTable1 = new JTable(bookTableModel1);
@@ -148,6 +160,19 @@ public class GoodsFrame extends JFrame {
                             System.out.println(nameOfGoods);
                             finalSum += Integer.parseInt(row[4]);
                             totalSum.setText(String.valueOf(finalSum));
+
+                            try {
+                                preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
+                                preparedStatement.setString(1, keyPhone);
+                                preparedStatement.setString(2, row[1]);
+                                preparedStatement.setString(3, row[2]);
+                                preparedStatement.setString(4, row[3]);
+                                preparedStatement.setString(5, row[4]);
+                                preparedStatement.execute();
+
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
                         } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -199,6 +224,20 @@ public class GoodsFrame extends JFrame {
                                 System.out.println(nameOfGoods);
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
+
+                                try {
+                                    preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
+                                    preparedStatement.setString(1, keyPhone);
+                                    preparedStatement.setString(2, row[1]);
+                                    preparedStatement.setString(3, row[2]);
+                                    preparedStatement.setString(4, row[3]);
+                                    preparedStatement.setString(5, row[4]);
+                                    preparedStatement.execute();
+
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
+                                }
+
                             } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -249,6 +288,19 @@ public class GoodsFrame extends JFrame {
                                 System.out.println(nameOfGoods);
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
+
+                                try {
+                                    preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
+                                    preparedStatement.setString(1, keyPhone);
+                                    preparedStatement.setString(2, row[1]);
+                                    preparedStatement.setString(3, row[2]);
+                                    preparedStatement.setString(4, row[3]);
+                                    preparedStatement.setString(5, row[4]);
+                                    preparedStatement.execute();
+
+                                } catch (SQLException ex) {
+                                    ex.printStackTrace();
+                                }
                             } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -359,6 +411,17 @@ public class GoodsFrame extends JFrame {
                 totalSum.setText(String.valueOf(finalSum));
                 System.out.println(row[4]);
                 modelSecond.removeRow(defTable.getSelectedRow());
+
+                try {
+                    preparedStatement3 = connect.getConnection().prepareStatement(DELETE_GOODS);
+                    preparedStatement3.setString(1, keyPhone); // id: 1, name: Name, age: 33, email: wfew
+                    preparedStatement3.setString(2, row[1]); // id: 1, name: Name, age: 33, email: wfew
+                    preparedStatement3.executeUpdate();
+                    System.out.println("try");
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("no delete");
+                }
 
             }});
 

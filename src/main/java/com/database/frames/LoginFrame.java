@@ -243,7 +243,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                             preparedStatement.setString(3, phoneTextField.getText());
                             preparedStatement.execute();
 
-                            userHash.put(phoneTextField.getText(), userTextField.getText());
+                          //  userHash.put(phoneTextField.getText(), userTextField.getText());
 //                            User user = new User();
 //                            user.setPhoneNumber(phoneTextField.getText());
 //                            user.setName(userTextField.getText());

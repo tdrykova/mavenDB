@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class LoginFrame extends JFrame implements ActionListener {
 
@@ -21,6 +22,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
+    public static HashMap<String, String> userHash = new HashMap<String, String>();
 
     char[] str = new char[2];
 
@@ -44,7 +46,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
     JComboBox stateOfPerson = new JComboBox(person);
     JTextField userTextField = new JTextField();
-    JTextField phoneTextField = new JTextField();
+    public static JTextField phoneTextField = new JTextField();
     JPasswordField passwordTextField = new JPasswordField();
 
     JButton loginButton = new JButton("ENTER");
@@ -193,6 +195,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             if (stateOfPerson.getSelectedItem() == "User") {
                 int isNew = 0;
                 int isVip = 0;
+                int isKey = 0;
                 int countUsers = 0;
                 phoneTextField.getText().getChars(0, 2, str, 0);
                 if (!userTextField.getText().isEmpty() &&
@@ -211,16 +214,23 @@ public class LoginFrame extends JFrame implements ActionListener {
 
                             if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
                                 isVip++;
+                                dispose();
+                                new GoodsFrame();
                                 System.out.println(isVip);
                                 JOptionPane.showMessageDialog(LoginFrame.this,
                                         "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
+                            } else
+                            if (phoneTextField.getText().equals(phone)) {
+                                isKey++;
+                                JOptionPane.showMessageDialog(LoginFrame.this,
+                                        "Такой номер уже существует, введите корректно имя/телефон");
                             }
                         }
                     } catch (SQLException es) {
                         es.printStackTrace();
                     }
 
-                    if (isVip == 0) {
+                    if (isVip == 0 && isKey == 0) {
 
                         isNew++;
                         try {
@@ -233,18 +243,21 @@ public class LoginFrame extends JFrame implements ActionListener {
                             preparedStatement.setString(3, phoneTextField.getText());
                             preparedStatement.execute();
 
-                            User user = new User();
-                            user.setPhoneNumber(phoneTextField.getText());
-                            user.setName(userTextField.getText());
-                            System.out.println(user.getName());
-                            System.out.println(user.getPhoneNumber());
+                            userHash.put(phoneTextField.getText(), userTextField.getText());
+//                            User user = new User();
+//                            user.setPhoneNumber(phoneTextField.getText());
+//                            user.setName(userTextField.getText());
+//                            System.out.println(user.getName());
+//                            System.out.println(user.getPhoneNumber());
+                            dispose();
+                            new GoodsFrame();
 
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
                     }
-                    dispose();
-                    new GoodsFrame();
+//                    dispose();
+//                    new GoodsFrame();
                 } else {
                     JOptionPane.showMessageDialog(this, "Invalid Name or Password");
                 }

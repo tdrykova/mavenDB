@@ -80,7 +80,7 @@ public class AdminFrame extends JFrame implements ActionListener {
     JButton addButton = new JButton("ADD");
     JButton deleteButton=new JButton("DELETE");
     JButton resetButton=new JButton("RESET");
-    JButton customersGoodsButton = new JButton("Show Selected Goods");
+    JButton customersGoodsButton = new JButton("Show Goods");
 
     // Левая панель с вкладками
     JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
@@ -102,7 +102,6 @@ public class AdminFrame extends JFrame implements ActionListener {
     public void addActionEvent() {
         addButton.addActionListener(this);
         deleteButton.addActionListener(this);
-        resetButton.addActionListener(this);
         resetButton.addActionListener(this);
         customersGoodsButton.addActionListener(this);
     }
@@ -458,8 +457,8 @@ public class AdminFrame extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == customersGoodsButton) {
+            dispose();
             new AdminCustomersGoods();
-
         }
     }
 }

@@ -14,7 +14,11 @@ import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
+
+import static com.database.frames.LoginFrame.userHash;
 
 public class AdminCustomersGoods extends JFrame implements ActionListener {
 
@@ -23,34 +27,23 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
+    public static HashMap<String, String> userHash = new HashMap<String, String>();
 
     char[] str = new char[2];
 
     ConnectionDb connect = new ConnectionDb();
-    int countUsers = 0;
 
-    String[] person = {
-            " ",
-            "User",
-            "Admin"
-    };
+    ArrayList<String > person = new ArrayList<>();
+
 
     Container container = getContentPane();
-    JLabel statusLabel = new JLabel("STATUS");
-    JLabel userLabel = new JLabel("NAME");
-    JLabel userHuntLabel = new JLabel("* No more than 10 characters");
-    JLabel numberOfPhoneLabel = new JLabel("PHONE NUM");
-    JLabel numberOfPhoneHuntLabel = new JLabel("* Ex.: 89264543266");
-    JLabel passwordLabel = new JLabel("PASSWORD");
-    JCheckBox showPassword = new JCheckBox("Show Password");
 
-    JComboBox stateOfPerson = new JComboBox(person);
-    JTextField userTextField = new JTextField();
-    JTextField phoneTextField = new JTextField();
-    JPasswordField passwordTextField = new JPasswordField();
+    JComboBox stateOfPerson = new JComboBox();
 
-    JButton loginButton = new JButton("ENTER");
-    JButton resetButton = new JButton("RESET");
+    JButton showGoodsButton = new JButton("Show Goods");
+    JButton returnButton = new JButton("Return to tables");
+
+    JTextArea checkTextArea = new JTextArea(25,5);
 
   //  public Set<String> keys = GoodsFrame.mapOfGoods.keySet();
 
@@ -60,6 +53,9 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
         setLocationAndSize();
         addComponentsToContainer();
         addActionEvent();
+        setSize(900, 600);
+        setVisible(true);
+        setResizable(false);
     }
 
     public void setLayoutManager() {
@@ -68,28 +64,110 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
     public void setLocationAndSize() {
 
-        stateOfPerson.setBounds(50, 290, 100, 30);
-        loginButton.setBounds(50,310,100,30);
+        stateOfPerson.setBounds(50, 150, 200, 30);
+        showGoodsButton.setBounds(50,200,100,30);
+        returnButton.setBounds(50,250,100,30);
+        checkTextArea.setBounds(300,150,400,300);
 
     }
 
     public void addComponentsToContainer() {
-        container.add(stateOfPerson);
-        container.add(loginButton);
+        try {
+            preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
+            ResultSet res2 = preparedStatement2.executeQuery();
 
+            while (res2.next()) {
+                // countUsers = res2.getInt(1);
+                int id = res2.getInt("id");
+                String name = res2.getString("name");
+                String phone = res2.getString("phone");
+                person.add(phone + " " + name);
+                String[] phoneUsers = new String[person.size()];
+                person.toArray(phoneUsers);
+                stateOfPerson.setModel(new DefaultComboBoxModel(phoneUsers));
+
+//                    if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
+//                        isVip++;
+//                        System.out.println(isVip);
+//                        JOptionPane.showMessageDialog(LoginFrame.this,
+//                                "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
+//                    }
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        container.add(stateOfPerson);
+
+        container.add(showGoodsButton);
+        container.add(returnButton);
+        container.add(checkTextArea);
     }
 
     public void addActionEvent() {
-        loginButton.addActionListener(this);
-        resetButton.addActionListener(this);
-        showPassword.addActionListener(this);
+        showGoodsButton.addActionListener(this);
+        returnButton.addActionListener(this);
+       // showPassword.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
+        if (e.getSource() == showGoodsButton) {
+
+//            try {
+//                preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
+//                ResultSet res2 = preparedStatement2.executeQuery();
+//
+//                while (res2.next()) {
+//                    // countUsers = res2.getInt(1);
+//                    int id = res2.getInt("id");
+//                    String name = res2.getString("name");
+//                    String phone = res2.getString("phone");
+//                    person.add(phone);
+//
+////                    if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
+////                        isVip++;
+////                        System.out.println(isVip);
+////                        JOptionPane.showMessageDialog(LoginFrame.this,
+////                                "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
+////                    }
+//
+//                }
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
+//            ResultSet res2 = preparedStatement2.executeQuery();
+//
+//            while (res2.next()) {
+//               // countUsers = res2.getInt(1);
+//                int id = res2.getInt("id");
+//                String name = res2.getString("name");
+//                String phone = res2.getString("phone");
+//
+//                if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
+//                    isVip++;
+//                    System.out.println(isVip);
+//                    JOptionPane.showMessageDialog(LoginFrame.this,
+//                            "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
+//                }
+
+            System.out.println("0");
            // System.out.println("Ключи: " + keys);
+           // userHash.get();
+//            Set<String> hashSet = userHash.keySet();
+//            for (String key: userHash.keySet()) {
+//                System.out.println(userHash.get(key));
+//            }
         }
     }
+
+
+////                checkTextArea.setText(checkTextArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
+//                checkTextArea.setText("================  TECHNO POINT  ================\n" + "  NUM       GOODS             PRICE          QUANTITY           TOTAL    \n");
+//                JScrollPane scrollPane = new JScrollPane(checkTextArea);
+//                scrollPane.setSize(600, 400);
+//                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//
 }
 

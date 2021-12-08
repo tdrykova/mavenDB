@@ -40,7 +40,11 @@ public class AdminFrame extends JFrame implements ActionListener {
     PreparedStatement preparedStatement3 = null;
     ConnectionDb connect = new ConnectionDb();
     private String nameOfDb = "";
+    private int idGoodsTv = 0;
+    private int idGoodsComp = 0;
+    private int idGoodsSmart = 0;
     private int idGoods = 0;
+
 
     private BookTableModel smartModel;
     private JScrollPane smartScroll;
@@ -76,6 +80,7 @@ public class AdminFrame extends JFrame implements ActionListener {
     JButton addButton = new JButton("ADD");
     JButton deleteButton=new JButton("DELETE");
     JButton resetButton=new JButton("RESET");
+    JButton customersGoodsButton = new JButton("Show Selected Goods");
 
     // Левая панель с вкладками
     JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
@@ -98,6 +103,8 @@ public class AdminFrame extends JFrame implements ActionListener {
         addButton.addActionListener(this);
         deleteButton.addActionListener(this);
         resetButton.addActionListener(this);
+        resetButton.addActionListener(this);
+        customersGoodsButton.addActionListener(this);
     }
 
     public void setLocationAndSize()
@@ -113,6 +120,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         resetButton.setBounds(50,350,100,30);
         deleteButton.setBounds(200,350,100,30);
         addButton.setBounds(350,350,100,30);
+        customersGoodsButton.setBounds(380,380,100,30);
 
         tabsLeft.setBounds(600,100,500,500);
     }
@@ -145,6 +153,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         container.add(resetButton);
         container.add(deleteButton);
         container.add(addButton);
+        container.add(customersGoodsButton);
 
         // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -229,13 +238,25 @@ public class AdminFrame extends JFrame implements ActionListener {
                 case "smartphones":
                     System.out.println(nameOfDb);
                     try {
+                        preparedStatement = connect.getConnection().prepareStatement(GET_ALL_TV);
+                        ResultSet res = preparedStatement.executeQuery();
                         preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_SMART);
                         ResultSet res2 = preparedStatement2.executeQuery();
+                        preparedStatement3 = connect.getConnection().prepareStatement(GET_ALL_COMPUTERS);
+                        ResultSet res3 = preparedStatement3.executeQuery();
 
                         while (res2.next()) {
-                            idGoods = res2.getInt(1);
+                            idGoodsSmart = res2.getInt(1);
                         }
+                        while (res.next()) {
+                            idGoodsTv = res.getInt(1);
+                        }
+                        while (res3.next()) {
+                            idGoodsComp = res3.getInt(1);
+                        }
+                        idGoods = Math.max(idGoodsSmart, Math.max(idGoodsTv, idGoodsComp));
                         idGoods++;
+                        System.out.println(idGoods);
 
                         preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_SMARTPHONE);
                         preparedStatement.setInt(1, idGoods);
@@ -263,12 +284,23 @@ public class AdminFrame extends JFrame implements ActionListener {
                 case "computers":
                     System.out.println(nameOfDb);
                     try {
-                        preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_COMPUTERS);
+                        preparedStatement = connect.getConnection().prepareStatement(GET_ALL_TV);
+                        ResultSet res = preparedStatement.executeQuery();
+                        preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_SMART);
                         ResultSet res2 = preparedStatement2.executeQuery();
+                        preparedStatement3 = connect.getConnection().prepareStatement(GET_ALL_COMPUTERS);
+                        ResultSet res3 = preparedStatement3.executeQuery();
 
                         while (res2.next()) {
-                            idGoods = res2.getInt(1);
+                            idGoodsSmart = res2.getInt(1);
                         }
+                        while (res.next()) {
+                            idGoodsTv = res.getInt(1);
+                        }
+                        while (res3.next()) {
+                            idGoodsComp = res3.getInt(1);
+                        }
+                        idGoods = Math.max(idGoodsSmart, Math.max(idGoodsTv, idGoodsComp));
                         idGoods++;
 
                         // refresh db
@@ -298,12 +330,23 @@ public class AdminFrame extends JFrame implements ActionListener {
                 case "tv":
                     System.out.println(nameOfDb);
                     try {
-                        preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_TV);
+                        preparedStatement = connect.getConnection().prepareStatement(GET_ALL_TV);
+                        ResultSet res = preparedStatement.executeQuery();
+                        preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_SMART);
                         ResultSet res2 = preparedStatement2.executeQuery();
+                        preparedStatement3 = connect.getConnection().prepareStatement(GET_ALL_COMPUTERS);
+                        ResultSet res3 = preparedStatement3.executeQuery();
 
                         while (res2.next()) {
-                            idGoods = res2.getInt(1);
+                            idGoodsSmart = res2.getInt(1);
                         }
+                        while (res.next()) {
+                            idGoodsTv = res.getInt(1);
+                        }
+                        while (res3.next()) {
+                            idGoodsComp = res3.getInt(1);
+                        }
+                        idGoods = Math.max(idGoodsSmart, Math.max(idGoodsTv, idGoodsComp));
                         idGoods++;
 
                         preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_TV);
@@ -412,6 +455,11 @@ public class AdminFrame extends JFrame implements ActionListener {
                     break;
                 }
             }
+        }
+
+        if (e.getSource() == customersGoodsButton) {
+            new AdminCustomersGoods();
+
         }
     }
 }

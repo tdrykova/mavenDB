@@ -1,8 +1,9 @@
 package com.database.frames;
 
+import com.database.Person.User;
 import com.database.openedu.BookTableModel;
 import com.database.openedu.ConnectionDb;
-import com.database.Person.User;
+import javafx.beans.binding.MapExpression;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -11,9 +12,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
 
 public class GoodsFrame extends JFrame {
 
+    // public static MapExpression<String, String> mapOfGoods = new ;
+    // public static MapExpression<Object, Object> mapOfGoods;
     private final Color[] colors = {Color.cyan, Color.orange, Color.orange};
     private final int countDb = 3;
     private final String TEMPL_label = "Метка %d";
@@ -29,6 +33,10 @@ public class GoodsFrame extends JFrame {
     //private DefaultTableModel defTableModel;
     private Object[][] array2 = {};
     Container container = getContentPane();
+    private int finalSum = 0;
+
+    //public ArrayList<String []> dataArrayList;
+ // public HashMap<String, String> mapOfGoods = new HashMap<String, String>();
     // Заголовки столбцов
 
     public GoodsFrame() {
@@ -46,6 +54,10 @@ public class GoodsFrame extends JFrame {
         bookTableScrollPage.setPreferredSize(new Dimension(400, 100));
         JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
         panel1.setVisible(true);
+
+        JLabel totalSum = new JLabel();
+        totalSum.setText("0");
+       // panel1.add(totalSum);
 
        // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -66,7 +78,7 @@ public class GoodsFrame extends JFrame {
             btnMinus.setText("-");
             btnPlus.setText("+");
             btnAdd.setText("Add");
-           // btnAdd.setEnabled(false);
+         //   btnAdd.setEnabled(false);
 //            btnMinus.setEnabled(false);
 //            btnPlus.setEnabled(false);
             panel.add(btnMinus);
@@ -108,9 +120,7 @@ public class GoodsFrame extends JFrame {
 //                    btnMinus.setEnabled(true);
 //                }
 //
-//                if (countLabel.getText() != "0") {
-//                        btnAdd.setEnabled(true);
-//                    }
+
 
                 // Добавление вкладки
                 tabsLeft.addTab("smartphones", panel);
@@ -119,28 +129,28 @@ public class GoodsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
 
                     TableModel modelFirst = bookTable1.getModel();
-                    int indexs[] = bookTable1.getSelectedRows();
-
-                    Object[] row = new Object[5];
-
+                    String [] row = new String[5];
                     modelSecond = (DefaultTableModel)defTable.getModel();
+                    int i = bookTable1.getSelectedRow();
 
-                    for (int i = 0; i < indexs.length; i++) {
-                      //  countAddGoods++;
-                 row[0] = modelFirst.getValueAt(indexs[i], 0);
-                       // row[0] = countAddGoods;
-                        row[1] = modelFirst.getValueAt(indexs[i], 1);
-                        row[2] = Integer.parseInt(countLabel.getText());
-                        row[3] = modelFirst.getValueAt(indexs[i], 3);
-                        row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
+                    row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
+                        row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
+                        row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
+                        row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
+                        row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
 
-//                        String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
-//                                + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
+                    String item = "id: " + row[0] + "; name: " + row[1] + "; count:" + row[2]
+                            + "; price: " + row[3] + "; total: "  + row[4];
+
+
                         if (!countLabel.getText().equals("0")) {
                             modelSecond.addRow(row);
+                            finalSum += Integer.parseInt(row[4]);
+                            totalSum.setText(String.valueOf(finalSum));
+//                            mapOfGoods.put(row[0], item);
+//                            System.out.println(mapOfGoods);
                         } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
 
-                    }
                     countLabel.setText("0");
                 }});
 
@@ -159,33 +169,31 @@ public class GoodsFrame extends JFrame {
                 panel.add(bookTableScrollPage1);
                 bookTableModel1.addDataComputers(connect);
 
-//                if (!countLabel.getText().equals("0"))
-//                    btnAdd.setEnabled(true);
                 btnAdd.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
 
                         TableModel modelFirst = bookTable1.getModel();
-                        int[] indexs = bookTable1.getSelectedRows();
-
-                        Object[] row = new Object[5];
-
+                        String [] row = new String[5];
                         modelSecond = (DefaultTableModel)defTable.getModel();
+                        int i = bookTable1.getSelectedRow();
 
-                        for (int i = 0; i < indexs.length; i++) {
-                       //     countAddGoods++;
-                     //       row[0] = countAddGoods;
-                           row[0] = modelFirst.getValueAt(indexs[i], 0);
-                            row[1] = modelFirst.getValueAt(indexs[i], 1);
-                            row[2] = Integer.parseInt(countLabel.getText());
-                            row[3] = modelFirst.getValueAt(indexs[i], 3);
-                            row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
+                           row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
+                            row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
+                            row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
+                            row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
+                            row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
 
-//                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
-//                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
-                            if (!countLabel.getText().equals("0")) {
+                        String item = "id: " + row[0] + "; name: " + row[1] + "; count:" + row[2]
+                                + "; price: " + row[3] + "; total: "  + row[4];
+
+                        if (!countLabel.getText().equals("0")) {
                                 modelSecond.addRow(row);
+                            finalSum += Integer.parseInt(row[4]);
+                            totalSum.setText(String.valueOf(finalSum));
+//                            mapOfGoods.put(row[0], item);
+//                            System.out.println(mapOfGoods);
                             } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
-                        }
+
                         countLabel.setText("0");
                     }});
             }
@@ -205,25 +213,29 @@ public class GoodsFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
 
                         TableModel modelFirst = bookTable1.getModel();
-                        int[] indexs = bookTable1.getSelectedRows();
-
-                        Object[] row = new Object[5];
-
+                        String [] row = new String[5];
                         modelSecond = (DefaultTableModel)defTable.getModel();
+                        int i = -1;
+                        i = bookTable1.getSelectedRow();
+                        if (i != -1) {
+                           // btnAdd.setEnabled(true);
+                            row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
+                            row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
+                            row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
+                            row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
+                            row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
+                        }
+                            String item = "id: " + row[0] + "; name: " + row[1] + "; count:" + row[2]
+                                    + "; price: " + row[3] + "; total: " + row[4];
 
-                            int i = indexs.length;
-                            row[0] = modelFirst.getValueAt(i, 0);
-                            row[1] = modelFirst.getValueAt(i, 1);
-                            row[2] = Integer.parseInt(countLabel.getText());
-                            row[3] = modelFirst.getValueAt(i, 3);
-                            row[4] = Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3]));
-
-//                            String item = String.valueOf(row[0]) + "   " + String.valueOf(row[1]) + "   " + String.valueOf(row[2])
-//                                    + "   " + String.valueOf(row[3]) + "   "  + String.valueOf(row[4]);
-                        if (!countLabel.getText().equals("0")) {
+                        if (!countLabel.getText().equals("0") && (i != -1)) {
                             modelSecond.addRow(row);
+                            finalSum += Integer.parseInt(row[4]);
+                            totalSum.setText(String.valueOf(finalSum));
+//                            mapOfGoods.put(row[0], item);
+//                            System.out.println(mapOfGoods);
                         } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
-
+                      //  btnAdd.setEnabled(false);
                         countLabel.setText("0");
                     }});
             }
@@ -307,11 +319,26 @@ public class GoodsFrame extends JFrame {
         btnDeleteGoods.setText("Return selected goods");
         btnDeleteGoods.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                int i = defTable.getSelectedRow();
+                String [] row2 = new String[5];
+
+                row2[0] = String.valueOf(defTable.getValueAt(i, 0));
+                row2[1] = String.valueOf(defTable.getValueAt(i, 1));
+                row2[2] = String.valueOf(defTable.getValueAt(i, 2));
+                row2[3] = String.valueOf(defTable.getValueAt(i, 3));
+                row2[4] = String.valueOf(defTable.getValueAt(i, 4));
+
+                finalSum -= Integer.parseInt(row2[4]);
+                totalSum.setText(String.valueOf(finalSum));
+                System.out.println(row2[4]);
                 modelSecond.removeRow(defTable.getSelectedRow());
+
             }});
 
-        JLabel nameLabel = new JLabel();
-        //nameLabel.setText(User.user.getName());
+//        JLabel totalSum = new JLabel();
+//        totalSum.setText("0");
+       // totalSum.setText(user.getName());
 
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
         //container.setLayout(null);
@@ -320,6 +347,7 @@ public class GoodsFrame extends JFrame {
        container.add(bookTableScrollPage);
        container.add(btnGoToCashier);
        container.add(btnDeleteGoods);
+       container.add(totalSum);
         // Вывод окна на экран
         setSize(800, 600);
         setVisible(true);

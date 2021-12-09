@@ -59,6 +59,8 @@ public class LoginFrame extends JFrame implements ActionListener {
         addActionEvent();
     }
 
+
+
     public void setLayoutManager() {
         container.setLayout(null);
     }

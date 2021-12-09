@@ -19,16 +19,12 @@ import java.util.HashMap;
 
 public class GoodsFrame extends JFrame {
 
-    // public static MapExpression<String, String> mapOfGoods = new ;
-    // public static MapExpression<Object, Object> mapOfGoods;
     private final Color[] colors = {Color.cyan, Color.orange, Color.orange};
     private final int countDb = 3;
-    private final String TEMPL_label = "Метка %d";
     private int clicksCount = 0;
     private int countAddGoods = 0;
 
     private static final String GET_ALL_SMARTPHONES = "SELECT * FROM smartphones";
-    private static final String INSERT = "INSERT image INTO smartphones VALUES(?)";
     private static final String SELECT_ONE = "SELECT * FROM smartphones WHERE id = ?";
     private String[] columnsHeader = {"id", "name", "count","price", "total"};
     private ArrayList<String> nameOfGoods = new ArrayList<>();
@@ -42,15 +38,13 @@ public class GoodsFrame extends JFrame {
     private static final String INSERT_NEW_GOODS = "INSERT INTO goods VALUES (?, ?, ?, ?, ?)";
     private static final String GET_ALL_GOODS = "SELECT * FROM goods";
 
-    private static final String DELETE_GOODS = "DELETE FROM goods WHERE id = ? AND name = ?";
+    private static final String DELETE_SELECTED_GOODS = "DELETE FROM goods WHERE id = ? AND name = ?";
+    private static final String DELETE_EXIT_GOODS = "DELETE FROM goods WHERE id = ?";
+    private static final String DELETE_EXIT_USER = "DELETE FROM users WHERE phone = ?";
 
     PreparedStatement preparedStatement3 = null;
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
-
-    //public ArrayList<String []> dataArrayList;
- // public HashMap<String, String> mapOfGoods = new HashMap<String, String>();
-    // Заголовки столбцов
 
     public GoodsFrame() {
 
@@ -72,7 +66,6 @@ public class GoodsFrame extends JFrame {
         totalSum.setText("0");
         JLabel totalSumLabel = new JLabel();
         totalSumLabel.setText("Total sum: ");
-       // panel1.add(totalSum);
 
        // super("Пример панели с вкладками JTabbedPane");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -95,9 +88,6 @@ public class GoodsFrame extends JFrame {
             btnMinus.setText("-");
             btnPlus.setText("+");
             btnAdd.setText("Add");
-         //   btnAdd.setEnabled(false);
-//            btnMinus.setEnabled(false);
-//            btnPlus.setEnabled(false);
             panel.add(btnMinus);
             panel.add(countLabel);
             panel.add(btnPlus);
@@ -338,59 +328,7 @@ public class GoodsFrame extends JFrame {
 
         JButton btnGetCheque = new JButton();
         btnGetCheque.setText("Get a cheque");
-        // the amount of your order is 500 rubles
 
-       // btnGoToCashier.addActionListener();
-//        btnGoToCashier.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//
-//                JFrame f = new JFrame("textfield");
-//                f.setLayout(new BorderLayout());
-//
-//                JPanel panel1 = new JPanel();
-//                JPanel panel2 = new JPanel();
-//
-//                // create a new button
-//                JButton b = new JButton("submit");
-//                b.setText("Get a SMS-check");
-//                b.setSize(new Dimension(10,20));
-//
-//                JTextArea checkTextArea = new JTextArea(25,5);
-////                checkTextArea.setText(checkTextArea.getText() + "================  TECHNO POINT  ==========\n" + "\t  NUM       GOODS    PRICE QUANTITY   TOTAL\n\t ");
-//                checkTextArea.setText("================  TECHNO POINT  ================\n" + "  NUM       GOODS             PRICE          QUANTITY           TOTAL    \n");
-//                JScrollPane scrollPane = new JScrollPane(checkTextArea);
-//                scrollPane.setSize(600, 400);
-//                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//
-//                panel1.add(checkTextArea);
-//                panel2.add(b);
-//
-//                f.add(panel1, BorderLayout.NORTH);
-//                f.add(panel2, BorderLayout.CENTER);
-//
-//                f.setSize(600, 500);
-//                f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//
-//
-//                Object[] row = new Object[5];
-//                int cols = modelSecond.getColumnCount();
-//                int rows = modelSecond.getRowCount();
-//
-//                for (int i = 0; i < rows; i++) {
-//                    countAddGoods++;
-////                    row[0] = modelSecond.getValueAt(i, 0);
-//                    row[0] = countAddGoods;
-//                    row[1] = modelSecond.getValueAt(i, 1);
-//                    row[2] = modelSecond.getValueAt(i, 3);
-//                    row[3] = modelSecond.getValueAt(i, 3);
-//                    row[4] = modelSecond.getValueAt(i, 4);
-//
-//                    String item = "   " + row[0] + "               " + row[1] + "            " + row[2]  + "           " + row[3] + "        " + row[4];
-//                    checkTextArea.append(item + "\n");
-//                    item = "";
-//                }
-//                f.setVisible(true);
-//            }});
 
         JButton btnDeleteGoods = new JButton();
         btnDeleteGoods.setText("Return selected goods");
@@ -413,7 +351,7 @@ public class GoodsFrame extends JFrame {
                 modelSecond.removeRow(defTable.getSelectedRow());
 
                 try {
-                    preparedStatement3 = connect.getConnection().prepareStatement(DELETE_GOODS);
+                    preparedStatement3 = connect.getConnection().prepareStatement(DELETE_SELECTED_GOODS);
                     preparedStatement3.setString(1, keyPhone); // id: 1, name: Name, age: 33, email: wfew
                     preparedStatement3.setString(2, row[1]); // id: 1, name: Name, age: 33, email: wfew
                     preparedStatement3.executeUpdate();
@@ -422,7 +360,41 @@ public class GoodsFrame extends JFrame {
                     ex.printStackTrace();
                     System.out.println("no delete");
                 }
+            }});
+//------------------------------------------------------------------
+        JButton btnExit = new JButton();
+        btnExit.setText("EXIT");
+        btnExit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 
+                int result = JOptionPane.showConfirmDialog(GoodsFrame.this,
+                        "Do you want to exit? :",
+                        String.valueOf(JOptionPane.YES_NO_OPTION),
+                        JOptionPane.ERROR_MESSAGE);
+                if (result == 0){
+                    System.out.println("You pressed Yes");
+                    try {
+                    preparedStatement3 = connect.getConnection().prepareStatement(DELETE_EXIT_GOODS);
+                    preparedStatement3.setString(1, keyPhone); // id: 1, name: Name, age: 33, email: wfew
+                    preparedStatement3.executeUpdate();
+                    System.out.println("try delete all goods");
+                    dispose();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("no delete");
+                }
+
+                try {
+                    preparedStatement2 = connect.getConnection().prepareStatement(DELETE_EXIT_USER);
+                    preparedStatement2.setString(1, keyPhone); // id: 1, name: Name, age: 33, email: wfew
+                    preparedStatement2.executeUpdate();
+                    System.out.println("try delete user");
+                    dispose();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("no delete");
+                 }
+                } else System.out.println("You pressed NO");
             }});
 
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -432,6 +404,7 @@ public class GoodsFrame extends JFrame {
         container.add(btnGetCheque);
         container.add(totalSumLabel);
         container.add(totalSum);
+        container.add(btnExit);
         setSize(700, 600);
         setVisible(true);
         setResizable(false);

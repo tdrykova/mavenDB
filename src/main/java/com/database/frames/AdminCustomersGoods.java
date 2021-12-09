@@ -6,6 +6,7 @@ import com.database.User2;
 import com.database.openedu.ConnectionDb;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Vector;
 
 import static com.database.frames.LoginFrame.userHash;
 
@@ -24,12 +26,24 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
     private static final String INSERT_NEW_USER = "INSERT INTO users VALUES (?, ?, ?)";
     private static final String GET_ALL_USERS = "SELECT * FROM users";
+    private static final String GET_ALL_GOODS_OF_USER = "SELECT * FROM goods";
 
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
-    public static HashMap<String, String> userHash = new HashMap<String, String>();
 
-    char[] str = new char[2];
+    private String[] columnsHeader = {"id", "name", "count","price", "total"};
+//    private Object[][] array2 = {{ "Kundan Kumar", "4031", "CSE", "8", "9" },
+//            { "Anand Jha", "6014", "IT", "i", "9" }};
+
+    private Object[][] array2 = {};
+
+    JPanel panel1 = new JPanel();
+    DefaultTableModel defTableModel = new DefaultTableModel(array2, columnsHeader);
+    JTable defTable = new JTable(defTableModel);
+    JScrollPane bookTableScrollPage = new JScrollPane(defTable); // что прокрутить
+
+    JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
+
 
     ConnectionDb connect = new ConnectionDb();
 
@@ -45,17 +59,41 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
     JTextArea checkTextArea = new JTextArea(25,5);
 
-  //  public Set<String> keys = GoodsFrame.mapOfGoods.keySet();
+//    DefaultTableModel defTableModel = new DefaultTableModel(array2, columnsHeader);
+//    JTable defTable = new JTable(defTableModel);
+//
+//
+//    JScrollPane bookTableScrollPage = new JScrollPane(defTable); // что прокрутить
+//    JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
 
+//    DefaultTableModel tableModel = new DefaultTableModel();
+//    JTable table = new JTable(tableModel);
 
+    //JTable table = new JTable(array2, columnsHeader);
+    JTable table = new JTable(defTableModel);
+//    DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+
+  //  JScrollPane sp = new JScrollPane(table);
     AdminCustomersGoods() {
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
+
+//        panel1.setSize(200,100);
+//        panel1.add(defTable);
+//        bookTableScrollPage.setPreferredSize(new Dimension(400, 100));
+//        panel1.setVisible(true);
+//
+//        container.add(bookTableScrollPage);
         addActionEvent();
         setSize(900, 600);
         setVisible(true);
-        setResizable(false);
+
+
+
+
+
+       // setResizable(false);
     }
 
     public void setLayoutManager() {
@@ -67,7 +105,10 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
         stateOfPerson.setBounds(50, 150, 200, 30);
         showGoodsButton.setBounds(50,200,100,30);
         returnButton.setBounds(50,250,100,30);
-        checkTextArea.setBounds(300,150,400,300);
+        bookTableScrollPage.setBounds(300,150,500,200);
+        //defTable.setBounds(300,150,400,300);
+//        bookTableScrollPage.setPreferredSize(new Dimension(400, 100));
+//        defTable.setBounds(300, 150,400,400);
 
     }
 
@@ -81,17 +122,10 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
                 int id = res2.getInt("id");
                 String name = res2.getString("name");
                 String phone = res2.getString("phone");
-                person.add(phone + " " + name);
+                person.add(phone);
                 String[] phoneUsers = new String[person.size()];
                 person.toArray(phoneUsers);
                 stateOfPerson.setModel(new DefaultComboBoxModel(phoneUsers));
-
-//                    if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
-//                        isVip++;
-//                        System.out.println(isVip);
-//                        JOptionPane.showMessageDialog(LoginFrame.this,
-//                                "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
-//                    }
 
             }
         } catch (SQLException ex) {
@@ -102,41 +136,62 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
         container.add(showGoodsButton);
         container.add(returnButton);
-        container.add(checkTextArea);
+
+       // container.add(defTable);
+//        container.add(bookTableScrollPage);
+        //container.add(new JScrollPane(table));
+       container.add(table);
+       container.add(bookTableScrollPage);
+
     }
 
     public void addActionEvent() {
         showGoodsButton.addActionListener(this);
         returnButton.addActionListener(this);
-       // showPassword.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == showGoodsButton) {
 
-//            try {
-//                preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_USERS);
-//                ResultSet res2 = preparedStatement2.executeQuery();
+
+
+        if (e.getSource() == showGoodsButton) {
+            DefaultTableModel modelSecond = (DefaultTableModel) table.getModel();
+            while (modelSecond.getRowCount() > 0) {
+                modelSecond.removeRow(0);
+            }
+            String userPhone = String.valueOf(stateOfPerson.getSelectedItem());
+            try {
+                preparedStatement2 = connect.getConnection().prepareStatement(GET_ALL_GOODS_OF_USER);
+                ResultSet res2 = preparedStatement2.executeQuery();
+
+                while (res2.next()) {
+                    String id = res2.getString(1);
+                    String name = res2.getString(2);
+                    String count = res2.getString(3);
+                    String price = res2.getString(4);
+                    String total = res2.getString(5);
+
+                    if (id.equals(userPhone)) {
+
 //
-//                while (res2.next()) {
-//                    // countUsers = res2.getInt(1);
-//                    int id = res2.getInt("id");
-//                    String name = res2.getString("name");
-//                    String phone = res2.getString("phone");
-//                    person.add(phone);
-//
-////                    if (userTextField.getText().equals(name) && phoneTextField.getText().equals(phone)) {
-////                        isVip++;
-////                        System.out.println(isVip);
-////                        JOptionPane.showMessageDialog(LoginFrame.this,
-////                                "Вы наш Vip-клиент! Ваша скидка 5% на все товары");
-////                    }
-//
-//                }
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
+                        System.out.println(id + " " + name + " "+ count +
+                                " " + price + " " + total);
+
+                        Vector<String > v = new Vector<String>(5);
+                        v.add(id);
+                        v.add(name);
+                        v.add(count);
+                        v.add(price);
+                        v.add(total);
+
+                        modelSecond.addRow(v);
+                        System.out.println("+");
+                    }
+                }
+            } catch (SQLException es) {
+                es.printStackTrace();
+            }
 //            ResultSet res2 = preparedStatement2.executeQuery();
 //
 //            while (res2.next()) {

@@ -150,19 +150,7 @@ public class GoodsFrame extends JFrame {
                             System.out.println(nameOfGoods);
                             finalSum += Integer.parseInt(row[4]);
                             totalSum.setText(String.valueOf(finalSum));
-
-                            try {
-                                preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
-                                preparedStatement.setString(1, keyPhone);
-                                preparedStatement.setString(2, row[1]);
-                                preparedStatement.setString(3, row[2]);
-                                preparedStatement.setString(4, row[3]);
-                                preparedStatement.setString(5, row[4]);
-                                preparedStatement.execute();
-
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
+                            
                         } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -215,18 +203,7 @@ public class GoodsFrame extends JFrame {
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
 
-                                try {
-                                    preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
-                                    preparedStatement.setString(1, keyPhone);
-                                    preparedStatement.setString(2, row[1]);
-                                    preparedStatement.setString(3, row[2]);
-                                    preparedStatement.setString(4, row[3]);
-                                    preparedStatement.setString(5, row[4]);
-                                    preparedStatement.execute();
 
-                                } catch (SQLException ex) {
-                                    ex.printStackTrace();
-                                }
 
                             } else
                             if (nameOfGoods.contains(row[1])) {
@@ -261,8 +238,7 @@ public class GoodsFrame extends JFrame {
                             modelSecond = (DefaultTableModel) defTable.getModel();
                             int i = -1;
                             i = bookTable1.getSelectedRow();
-                          //  if (i != -1) {
-                                // btnAdd.setEnabled(true);
+
                                 row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
                                 row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
                                 row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
@@ -279,18 +255,6 @@ public class GoodsFrame extends JFrame {
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
 
-                                try {
-                                    preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
-                                    preparedStatement.setString(1, keyPhone);
-                                    preparedStatement.setString(2, row[1]);
-                                    preparedStatement.setString(3, row[2]);
-                                    preparedStatement.setString(4, row[3]);
-                                    preparedStatement.setString(5, row[4]);
-                                    preparedStatement.execute();
-
-                                } catch (SQLException ex) {
-                                    ex.printStackTrace();
-                                }
                             } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -328,6 +292,36 @@ public class GoodsFrame extends JFrame {
 
         JButton btnGetCheque = new JButton();
         btnGetCheque.setText("Get a cheque");
+        btnGetCheque.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               // int i = defTable.getSelectedRow();
+                String [] row = new String[5];
+                DefaultTableModel modelSecond = (DefaultTableModel) defTable.getModel();
+                int length = modelSecond.getRowCount();
+                System.out.println(length);
+                int ind = 0;
+                while (length > 0) {
+                    row[0] = String.valueOf(modelSecond.getValueAt(ind, 0));
+                    row[1] = String.valueOf(modelSecond.getValueAt(ind, 1));
+                    row[2] = String.valueOf(modelSecond.getValueAt(ind, 2));
+                    row[3] = String.valueOf(modelSecond.getValueAt(ind, 3));
+                    row[4] = String.valueOf(modelSecond.getValueAt(ind, 4));
+                    length--;
+                    ind++;
+
+                    try {
+                        preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_GOODS);
+                        preparedStatement.setString(1, keyPhone);
+                        preparedStatement.setString(2, row[1]);
+                        preparedStatement.setString(3, row[2]);
+                        preparedStatement.setString(4, row[3]);
+                        preparedStatement.setString(5, row[4]);
+                        preparedStatement.execute();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }});
 
 
         JButton btnDeleteGoods = new JButton();
@@ -371,7 +365,7 @@ public class GoodsFrame extends JFrame {
                         "Do you want to exit? :",
                         String.valueOf(JOptionPane.YES_NO_OPTION),
                         JOptionPane.ERROR_MESSAGE);
-                if (result == 0){
+                if (result == 0 && LoginFrame.isVip == 0){
                     System.out.println("You pressed Yes");
                     try {
                     preparedStatement3 = connect.getConnection().prepareStatement(DELETE_EXIT_GOODS);
@@ -394,7 +388,11 @@ public class GoodsFrame extends JFrame {
                     ex.printStackTrace();
                     System.out.println("no delete");
                  }
-                } else System.out.println("You pressed NO");
+                }
+                else if (result == 0 && LoginFrame.isVip != 0) {
+                    dispose();
+                }
+                else System.out.println("You pressed NO");
             }});
 
         container.setLayout(new FlowLayout(FlowLayout.CENTER));

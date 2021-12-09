@@ -49,6 +49,8 @@ public class LoginFrame extends JFrame implements ActionListener {
     public static JTextField phoneTextField = new JTextField();
     JPasswordField passwordTextField = new JPasswordField();
 
+    public static int isVip = 0;
+
     JButton loginButton = new JButton("ENTER");
     JButton resetButton = new JButton("RESET");
 
@@ -196,7 +198,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
             if (stateOfPerson.getSelectedItem() == "User") {
                 int isNew = 0;
-                int isVip = 0;
+
                 int isKey = 0;
                 int countUsers = 0;
                 phoneTextField.getText().getChars(0, 2, str, 0);

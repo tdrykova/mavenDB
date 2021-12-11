@@ -1,20 +1,16 @@
-package com.database.openedu;
+package com.database.connection;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class BookTableModel extends AbstractTableModel {
-    // TODO обновление данных
-    // TODO удаление
-   // private static final long serialVersion = 2134212342322L;
+public class GoodsTableModel extends AbstractTableModel {
 
     private int columnCount = 4;
-    private ArrayList<String []> dataArrayList; // массив строк
+    private ArrayList<String []> dataArrayList; // массив строк таблицы
 
-    public BookTableModel() {
+    public GoodsTableModel() {
         dataArrayList = new ArrayList<String []>();
         for (int i = 0; i < dataArrayList.size(); i++) {
             dataArrayList.add(new String[getColumnCount()]);
@@ -54,49 +50,11 @@ public class BookTableModel extends AbstractTableModel {
         rowTable = row;
         dataArrayList.add(rowTable);
     }
-//
-//    public void removeAll(int row) {
-//        dataArrayList.remove(row);
-//        fireTableRowsDeleted(row,row);
-//    }
 
     public void removeAll(){
         int size = dataArrayList.size();
         dataArrayList.clear();
         fireTableRowsDeleted(0, size);
-    }
-
-//    public void deleteData(String []row) {
-//        String []rowTable = new String[getColumnCount()];
-//        rowTable = row;
-//        dataArrayList.remove(rowTable);
-//    }
-
-//
-//    public void deleteData(int row) {
-//        String []rowTable = new String[getColumnCount()];
-//        dataArrayList.remove(row);
-//    }
-
-    public void addDataUsers(ConnectionDb connect) {
-        ResultSet result = connect.resultSetQuery("SELECT * FROM users");
-
-            try {
-                while (result.next()) {
-                    String id = result.getString("id");
-                    String name = result.getString("name");
-                    String age = result.getString("age");
-                    String email = result.getString("email");
-
-                    String []row = {id, name, age, email};
-
-                    addData(row);
-                }
-                // do smth else
-                result.close();
-            } catch (SQLException e) {
-                System.out.println("add data isn't worked");
-            }
     }
 
     public void addDataSmartPhones(ConnectionDb connect) {
@@ -110,10 +68,8 @@ public class BookTableModel extends AbstractTableModel {
                 String email = result.getString("price");
 
                 String []row = {id, name, count, email};
-
                 addData(row);
             }
-            // do smth else
             result.close();
         } catch (SQLException e) {
             System.out.println("add data isn't worked");
@@ -131,10 +87,8 @@ public class BookTableModel extends AbstractTableModel {
                 String price = result.getString("price");
 
                 String []row = {id, name, count, price};
-
                 addData(row);
             }
-            // do smth else
             result.close();
         } catch (SQLException e) {
             System.out.println("add data isn't worked");
@@ -152,10 +106,8 @@ public class BookTableModel extends AbstractTableModel {
                 String email = result.getString("price");
 
                 String []row = {id, name, count, email};
-
                 addData(row);
             }
-            // do smth else
             result.close();
         } catch (SQLException e) {
             System.out.println("add data isn't worked");

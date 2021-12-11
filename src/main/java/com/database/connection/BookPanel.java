@@ -1,12 +1,12 @@
-package com.database.openedu;
+package com.database.connection;
 
 import javax.swing.*;
 
 public class BookPanel extends JPanel {
 
     private ConnectionDb connect;
-    private BookTableModel bookTableModel = new BookTableModel();
-    private JTable bookTable = new JTable(bookTableModel);
+    private GoodsTableModel goodsTableModel = new GoodsTableModel();
+    private JTable bookTable = new JTable(goodsTableModel);
 
     private JButton addButton = new JButton("Add");
     private JButton deleteButton = new JButton("Delete");

@@ -1,26 +1,17 @@
 package com.database.frames;
 
-
-import com.database.Person.User;
-import com.database.User2;
-import com.database.openedu.ConnectionDb;
+import com.database.connection.ConnectionDb;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.Vector;
-
-import static com.database.frames.LoginFrame.userHash;
 
 public class AdminCustomersGoods extends JFrame implements ActionListener {
 

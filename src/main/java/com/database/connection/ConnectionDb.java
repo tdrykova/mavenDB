@@ -1,7 +1,6 @@
-package com.database.openedu;
+package com.database.connection;
 
 import java.sql.*;
-import java.util.Properties;
 
 public class ConnectionDb {
     private String url = "jdbc:mysql://localhost:3306/mydbtest";

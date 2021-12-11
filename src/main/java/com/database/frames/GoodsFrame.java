@@ -19,12 +19,11 @@ public class GoodsFrame extends JFrame {
     private DefaultTableModel modelSecond;
     Container container = getContentPane();
     private int finalSum = 0;
+    private int finalSumVip = 0;
 
-    private static final String INSERT_NEW_GOODS = "INSERT INTO goods VALUES (?, ?, ?, ?, ?)";
-    private static final String DELETE_SELECTED_GOODS = "DELETE FROM goods WHERE id = ? AND name = ?";
+    private static final String INSERT_NEW_GOODS = "INSERT INTO goods VALUES (?, ?, ?, ?, ?, ?)";
     private static final String DELETE_EXIT_USER = "DELETE FROM users WHERE phone = ?";
 
-    PreparedStatement preparedStatement3 = null;
     PreparedStatement preparedStatement = null;
     PreparedStatement preparedStatement2 = null;
 
@@ -50,6 +49,18 @@ public class GoodsFrame extends JFrame {
         totalSum.setText("0");
         JLabel totalSumLabel = new JLabel();
         totalSumLabel.setText("Total sum: ");
+
+        JLabel totalVipSum = new JLabel();
+        totalVipSum.setText("0");
+        totalVipSum.setVisible(false);
+        JLabel totalSumVipLabel = new JLabel();
+        totalSumVipLabel.setText("With discount: ");
+        totalSumVipLabel.setVisible(false);
+
+        if (LoginFrame.isVip > 0) {
+            totalVipSum.setVisible(true);
+            totalSumVipLabel.setVisible(true);
+        }
 
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
@@ -123,7 +134,8 @@ public class GoodsFrame extends JFrame {
                             System.out.println("Selected goods are added to basket from db of smartphones");
                             finalSum += Integer.parseInt(row[4]);
                             totalSum.setText(String.valueOf(finalSum));
-
+                            finalSumVip = (int) (finalSum * 0.95);
+                            totalVipSum.setText(String.valueOf(finalSumVip));
                         } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -169,6 +181,8 @@ public class GoodsFrame extends JFrame {
                                 System.out.println("Selected goods are added to basket from db computers");
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
+                                finalSumVip = (int) (finalSum * 0.95);
+                                totalVipSum.setText(String.valueOf(finalSumVip));
                             } else
                             if (nameOfGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
@@ -213,6 +227,8 @@ public class GoodsFrame extends JFrame {
                                 System.out.println("Selected goods are added to basket from db tv");
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
+                                finalSumVip = (int) (finalSum * 0.95);
+                                totalVipSum.setText(String.valueOf(finalSumVip));
 
                             } else
                             if (nameOfGoods.contains(row[1])) {
@@ -240,7 +256,7 @@ public class GoodsFrame extends JFrame {
         btnGetCheque.setText("Get a cheque");
         btnGetCheque.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String [] row = new String[5];
+                String [] row = new String[6];
                 DefaultTableModel modelSecond = (DefaultTableModel) defTable.getModel();
                 int length = modelSecond.getRowCount();
 
@@ -252,6 +268,9 @@ public class GoodsFrame extends JFrame {
                     row[2] = String.valueOf(modelSecond.getValueAt(ind, 2));
                     row[3] = String.valueOf(modelSecond.getValueAt(ind, 3));
                     row[4] = String.valueOf(modelSecond.getValueAt(ind, 4));
+                    if (LoginFrame.isVip > 0) row[5] = String.valueOf(totalVipSum.getText());
+                    else row[5] = String.valueOf(totalSum.getText());
+
                     length--;
                     ind++;
 
@@ -262,13 +281,16 @@ public class GoodsFrame extends JFrame {
                         preparedStatement.setString(3, row[2]);
                         preparedStatement.setString(4, row[3]);
                         preparedStatement.setString(5, row[4]);
+                        preparedStatement.setString(6, row[5]);
                         preparedStatement.execute();
                         preparedStatement.close();
-                        System.out.println("All selected goods are saved to db");
-                    } catch (SQLException ex) {
+                    }
+                    catch (SQLException ex) {
                         ex.printStackTrace();
                         System.out.println("Selected goods aren't saved to db");
-                    }}
+                    }
+                    System.out.println("All selected goods are saved to db");
+                }
                     JOptionPane.showMessageDialog(GoodsFrame.this, "Your order has accepted, our operator will call you soon by phone");
                     dispose();
                  } else
@@ -281,7 +303,6 @@ public class GoodsFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 int i = defTable.getSelectedRow();
-
                 if (i >= 0) {
                     String [] row = new String[5];
 
@@ -294,20 +315,10 @@ public class GoodsFrame extends JFrame {
                     finalSum -= Integer.parseInt(row[4]);
                     nameOfGoods.remove(row[1]);
                     totalSum.setText(String.valueOf(finalSum));
+                    finalSumVip = (int) (finalSum * 0.95);
+                    totalVipSum.setText(String.valueOf(finalSumVip));
                     modelSecond.removeRow(defTable.getSelectedRow());
                     System.out.println("Selected goods is deleted from the basket");
-
-//                    try {
-//                        preparedStatement3 = connect.getConnection().prepareStatement(DELETE_SELECTED_GOODS);
-//                        preparedStatement3.setString(1, keyPhone);
-//                        preparedStatement3.setString(2, row[1]);
-//                        preparedStatement3.executeUpdate();
-//                        preparedStatement3.close();
-//                        System.out.println("Selected goods are deleted from db");
-//                    } catch (SQLException ex) {
-//                        ex.printStackTrace();
-//                        System.out.println("It isn't impossible to delete selected goods from db");
-//                    }
                 } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose an item to return");
             }});
 //------------------------------------------------------------------
@@ -349,6 +360,8 @@ public class GoodsFrame extends JFrame {
         container.add(btnExit);
         container.add(totalSumLabel);
         container.add(totalSum);
+        container.add(totalSumVipLabel);
+        container.add(totalVipSum);
 
         setBounds(500, 150, 750, 600);
         setVisible(true);

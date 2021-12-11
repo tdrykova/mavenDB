@@ -17,7 +17,7 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
     private static final String GET_ALL_USERS = "SELECT * FROM users";
     private static final String GET_ALL_GOODS_OF_USER = "SELECT * FROM goods";
-    private final String[] columnsHeader = {"id", "name", "count","price", "total"};
+    private final String[] columnsHeader = {"id", "name", "count","price", "total", "cheque"};
     private final Object[][] arrayData = {};
 
     ConnectionDb connect = new ConnectionDb();
@@ -33,7 +33,7 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
 
     JComboBox stateOfPerson = new JComboBox();
     JButton showGoodsButton = new JButton("SHOW GOODS");
-    JButton returnButton = new JButton("RETURN THE PREV PAGE");
+    JButton returnButton = new JButton("BACK PREV PAGE");
     JButton exitButton = new JButton("EXIT");
 
     AdminCustomersGoods() {
@@ -52,10 +52,10 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
     }
 
     public void setLocationAndSize() {
-        stateOfPerson.setBounds(50, 150, 200, 30);
-        showGoodsButton.setBounds(50,200,100,30);
-        returnButton.setBounds(50,250,100,30);
-        exitButton.setBounds(50,300,100,30);
+        stateOfPerson.setBounds(50, 150, 170, 30);
+        showGoodsButton.setBounds(50,200,170,30);
+        returnButton.setBounds(50,250,170,30);
+        exitButton.setBounds(50,300,170,30);
         bookTableScrollPage.setBounds(300,150,500,200);
     }
 
@@ -108,16 +108,18 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
                     String count = res2.getString(3);
                     String price = res2.getString(4);
                     String total = res2.getString(5);
+                    String cheque = res2.getString(6);
 
                     if (id.equals(userPhone)) {
                         System.out.println(id + " " + name + " "+ count +
-                                " " + price + " " + total);
-                        Vector<String> v = new Vector<String>(5);
+                                " " + price + " " + total + " " + cheque);
+                        Vector<String> v = new Vector<String>(6);
                         v.add(id);
                         v.add(name);
                         v.add(count);
                         v.add(price);
                         v.add(total);
+                        v.add(cheque);
 
                         modelSecond.addRow(v);
                     }

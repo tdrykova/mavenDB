@@ -3,12 +3,16 @@ package com.database.frames;
 
 import com.database.connection.ConnectionDb;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +35,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     };
 
     Container container = getContentPane();
+
     JLabel statusLabel = new JLabel("STATUS");
     JLabel userLabel = new JLabel("NAME");
     JLabel userHintLabel = new JLabel("* No more than 10 characters");
@@ -44,6 +49,19 @@ public class LoginFrame extends JFrame implements ActionListener {
     public static JTextField phoneTextField = new JTextField();
     JPasswordField passwordTextField = new JPasswordField();
 
+    BufferedImage image;
+
+    {
+        try {
+            image = ImageIO.read(new File("C:/Users/tatry/Downloads/comp.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    JLabel label = new JLabel(new ImageIcon(image ));
+
+
     public static int isVip = 0;
 
     JButton loginButton = new JButton("ENTER");
@@ -55,40 +73,48 @@ public class LoginFrame extends JFrame implements ActionListener {
         setLocationAndSize();
         addComponentsToContainer();
         addActionEvent();
+
     }
+
 
     public void setLayoutManager() {
         container.setLayout(null);
     }
 
-    public void setLocationAndSize() {
-        statusLabel.setBounds(50, 150, 100, 30);
-        userLabel.setBounds(50, 220, 100, 30);
 
-        numberOfPhoneLabel.setBounds(50, 290, 100, 30);
+
+    public void setLocationAndSize() {
+        label.setBounds(30,10,300,200);
+
+        statusLabel.setBounds(50, 240, 100, 30);
+        userLabel.setBounds(50, 310, 100, 30);
+
+        numberOfPhoneLabel.setBounds(50, 380, 100, 30);
         numberOfPhoneLabel.setVisible(false);
-        passwordLabel.setBounds(50, 290, 100, 30);
+        passwordLabel.setBounds(50, 380, 100, 30);
         passwordLabel.setVisible(false);
 
-        stateOfPerson.setBounds(150, 150, 170, 30);
-        userTextField.setBounds(150, 220, 170, 30);
-        userHintLabel.setBounds(150, 250, 170, 30);
+        stateOfPerson.setBounds(150, 240, 170, 30);
+        userTextField.setBounds(150, 310, 170, 30);
+        userHintLabel.setBounds(150, 340, 170, 30);
 
-        phoneTextField.setBounds(150, 290, 170, 30);
+        phoneTextField.setBounds(150, 380, 170, 30);
         phoneTextField.setVisible(false);
-        numberOfPhoneHintLabel.setBounds(150, 320, 170, 30);
+        numberOfPhoneHintLabel.setBounds(150, 410, 170, 30);
         numberOfPhoneHintLabel.setVisible(false);
-        passwordTextField.setBounds(150, 290, 170, 30);
+        passwordTextField.setBounds(150, 380, 170, 30);
         passwordTextField.setVisible(false);
-        showPassword.setBounds(150, 320, 170, 30);
+        showPassword.setBounds(150, 410, 170, 30);
         showPassword.setVisible(false);
 
-        exitButton.setBounds(50, 440, 75, 30);
-        resetButton.setBounds(150, 440, 75, 30);
-        loginButton.setBounds(250, 440, 75, 30);
+        exitButton.setBounds(50, 460, 75, 30);
+        resetButton.setBounds(150, 460, 75, 30);
+        loginButton.setBounds(250, 460, 75, 30);
     }
 
     public void addComponentsToContainer() {
+    // container.add(imageLabel);
+        container.add(label);
         container.add(statusLabel);
         container.add(userLabel);
         container.add(numberOfPhoneLabel);

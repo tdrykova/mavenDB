@@ -1,22 +1,42 @@
 package com.database.frames;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 
 public class MainFrame extends JFrame {
 
     static JFrame f;
     static JProgressBar b;
+    Container container = getContentPane();
 
     public void createMainFrame() {
 
+        BufferedImage image = null;
+
+        {
+            try {
+                image = ImageIO.read(new File("C:/Users/tatry/Downloads/basket.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        JLabel label = new JLabel(new ImageIcon(image));
+
         // create a frame
-        f = new JFrame("ProgressBar demo");
+        f = new JFrame("Opening...");
 
         // create a panel
         JPanel p = new JPanel();
+
+        JLabel nameStore = new JLabel("TechnoPoint");
+        nameStore.setBounds(0,30,100,200);
+        nameStore.setFont(new Font("TimesRoman", Font.BOLD, 22));
 
         // create a progressbar
         b = new JProgressBar();
@@ -26,15 +46,15 @@ public class MainFrame extends JFrame {
 
         b.setStringPainted(true);
 
-        // add progressbar
+
         p.add(b);
+        p.add(nameStore);
+        p.add(label);
 
         // add panel
         f.add(p);
 
-        // set the size of the frame
-       // f.setSize(500, 500);
-        f.setBounds(800, 150, 500, 500);
+        f.setBounds(400, 300, 600, 550);
         f.setResizable(false);
         f.setVisible(true);
 
@@ -53,7 +73,7 @@ public class MainFrame extends JFrame {
                 b.setValue(i + 10);
 
                 // delay the thread
-                Thread.sleep(50);
+                Thread.sleep(1000);
                 i += 20;
             }
         }

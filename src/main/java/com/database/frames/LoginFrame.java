@@ -48,6 +48,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
     JButton loginButton = new JButton("ENTER");
     JButton resetButton = new JButton("RESET");
+    JButton exitButton = new JButton("EXIT");
 
     LoginFrame() {
         setLayoutManager();
@@ -82,8 +83,9 @@ public class LoginFrame extends JFrame implements ActionListener {
         showPassword.setBounds(150, 320, 170, 30);
         showPassword.setVisible(false);
 
-        loginButton.setBounds(200, 440, 100, 30);
-        resetButton.setBounds(50, 440, 100, 30);
+        exitButton.setBounds(50, 440, 75, 30);
+        resetButton.setBounds(150, 440, 75, 30);
+        loginButton.setBounds(250, 440, 75, 30);
     }
 
     public void addComponentsToContainer() {
@@ -173,12 +175,14 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         container.add(loginButton);
         container.add(resetButton);
+        container.add(exitButton);
     }
 
     public void addActionEvent() {
         loginButton.addActionListener(this);
         resetButton.addActionListener(this);
         showPassword.addActionListener(this);
+        exitButton.addActionListener(this);
     }
 
     @Override
@@ -280,5 +284,20 @@ public class LoginFrame extends JFrame implements ActionListener {
                     passwordTextField.setText("");
                     System.out.println("TextFields are cleared");
                 }
+
+                if (e.getSource() == exitButton) {
+                    int result = JOptionPane.showConfirmDialog(LoginFrame.this,
+                            "Do you want to exit? :",
+                            String.valueOf(JOptionPane.YES_NO_OPTION),
+                            JOptionPane.YES_NO_OPTION);
+                    if (result == 0){
+                        System.out.println("You pressed Yes");
+                        dispose();
+
+                    } else System.out.println("You pressed NO");
+                }
+
+
     }
+
 }

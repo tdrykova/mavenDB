@@ -74,6 +74,7 @@ public class AdminFrame extends JFrame implements ActionListener {
     JButton deleteButton = new JButton("DELETE");
     JButton resetButton = new JButton("RESET");
     JButton customersGoodsButton = new JButton("SHOW GOODS");
+    JButton exitButton = new JButton("EXIT");
 
     // Панель со вкладками
     JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -95,6 +96,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         deleteButton.addActionListener(this);
         resetButton.addActionListener(this);
         customersGoodsButton.addActionListener(this);
+        exitButton.addActionListener(this);
     }
 
     public void setLocationAndSize()
@@ -112,6 +114,7 @@ public class AdminFrame extends JFrame implements ActionListener {
 
         resetButton.setBounds(50,390,100,30);
         deleteButton.setBounds(200,390,100,30);
+        exitButton.setBounds(200,440,100,30);
         addButton.setBounds(350,390,100,30);
 
         tabsLeft.setBounds(600,100,600,500);
@@ -172,6 +175,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         container.add(deleteButton);
         container.add(addButton);
         container.add(customersGoodsButton);
+        container.add(exitButton);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Создание вкладок
@@ -455,5 +459,18 @@ public class AdminFrame extends JFrame implements ActionListener {
             dispose();
             new AdminCustomersGoods();
         }
+
+        if (e.getSource() == exitButton) {
+            int result = JOptionPane.showConfirmDialog(AdminFrame.this,
+                    "Do you want to exit? :",
+                    String.valueOf(JOptionPane.YES_NO_OPTION),
+                    JOptionPane.YES_NO_OPTION);
+            if (result == 0){
+                System.out.println("You pressed Yes");
+                dispose();
+            } else System.out.println("You pressed NO");
+        }
     }
+
+
 }

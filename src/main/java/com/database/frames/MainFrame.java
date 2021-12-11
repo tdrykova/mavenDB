@@ -33,8 +33,9 @@ public class MainFrame extends JFrame {
         f.add(p);
 
         // set the size of the frame
-        f.setSize(500, 500);
-        f.setResizable(false);//запрет изменения размеров
+       // f.setSize(500, 500);
+        f.setBounds(800, 150, 500, 500);
+        f.setResizable(false);
         f.setVisible(true);
 
         fill();
@@ -60,15 +61,12 @@ public class MainFrame extends JFrame {
         }
         f.dispose();
 
-        // second window
         LoginFrame frame = new LoginFrame();
         frame.setTitle("Login Form");
         frame.setVisible(true);
-        frame.setBounds(10, 10, 370, 600);
+        frame.setBounds(800, 150, 370, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-
     }
-
 }
 

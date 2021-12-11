@@ -14,15 +14,9 @@ import java.util.ArrayList;
 
 public class GoodsFrame extends JFrame {
 
-    private final int countDb = 3;
-    private int clicksCount = 0;
-    private int countAddGoods = 0;
-
-    private String[] columnsHeader = {"id", "name", "count","price", "total"};
-    private ArrayList<String> nameOfGoods = new ArrayList<>();
+    private final ArrayList<String> nameOfGoods = new ArrayList<>();
 
     private DefaultTableModel modelSecond;
-    private Object[][] array2 = {};
     Container container = getContentPane();
     private int finalSum = 0;
 
@@ -41,11 +35,13 @@ public class GoodsFrame extends JFrame {
 
         JPanel panel1 = new JPanel();
         panel1.setSize(200,100);
+        String[] columnsHeader = {"id", "name", "count", "price", "total"};
+        Object[][] array2 = {};
         DefaultTableModel defTableModel = new DefaultTableModel(array2, columnsHeader);
         JTable defTable = new JTable(defTableModel);
         panel1.add(defTable);
 
-        JScrollPane bookTableScrollPage = new JScrollPane(defTable); // что прокрутить
+        JScrollPane bookTableScrollPage = new JScrollPane(defTable);
         bookTableScrollPage.setPreferredSize(new Dimension(400, 100));
         JScrollPane scrollPane = new JScrollPane(bookTableScrollPage);
         panel1.setVisible(true);
@@ -55,10 +51,11 @@ public class GoodsFrame extends JFrame {
         JLabel totalSumLabel = new JLabel();
         totalSumLabel.setText("Total sum: ");
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
         // Создание вкладок
+        int countDb = 3;
         for (int i = 1; i <= countDb; i++) {
             JPanel panel = new JPanel();
             panel.add(new JLabel("Count"));
@@ -66,6 +63,7 @@ public class GoodsFrame extends JFrame {
             JButton btnMinus = new JButton();
             JButton btnAdd = new JButton();
             JLabel countLabel = new JLabel();
+            int clicksCount = 0;
             countLabel.setText(Integer.toString(clicksCount));
             btnMinus.setText("-");
             btnPlus.setText("+");
@@ -247,6 +245,7 @@ public class GoodsFrame extends JFrame {
                 int length = modelSecond.getRowCount();
 
                 int ind = 0;
+                if (length > 0) {
                 while (length > 0) {
                     row[0] = String.valueOf(modelSecond.getValueAt(ind, 0));
                     row[1] = String.valueOf(modelSecond.getValueAt(ind, 1));
@@ -269,12 +268,15 @@ public class GoodsFrame extends JFrame {
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                         System.out.println("Selected goods aren't saved to db");
-                    }
-                }
+                    }}
+                    JOptionPane.showMessageDialog(GoodsFrame.this, "Your order has accepted, our operator will call you soon by phone");
+                    dispose();
+                 } else
+                     JOptionPane.showMessageDialog(GoodsFrame.this, "Your basket is empty - exit or choose goods");
             }});
 
         JButton btnDeleteGoods = new JButton();
-        btnDeleteGoods.setText("Return selected goods");
+        btnDeleteGoods.setText("Return goods");
         btnDeleteGoods.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -293,18 +295,19 @@ public class GoodsFrame extends JFrame {
                     nameOfGoods.remove(row[1]);
                     totalSum.setText(String.valueOf(finalSum));
                     modelSecond.removeRow(defTable.getSelectedRow());
+                    System.out.println("Selected goods is deleted from the basket");
 
-                    try {
-                        preparedStatement3 = connect.getConnection().prepareStatement(DELETE_SELECTED_GOODS);
-                        preparedStatement3.setString(1, keyPhone);
-                        preparedStatement3.setString(2, row[1]);
-                        preparedStatement3.executeUpdate();
-                        preparedStatement3.close();
-                        System.out.println("Selected goods are deleted from db");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        System.out.println("It isn't impossible to delete selected goods from db");
-                    }
+//                    try {
+//                        preparedStatement3 = connect.getConnection().prepareStatement(DELETE_SELECTED_GOODS);
+//                        preparedStatement3.setString(1, keyPhone);
+//                        preparedStatement3.setString(2, row[1]);
+//                        preparedStatement3.executeUpdate();
+//                        preparedStatement3.close();
+//                        System.out.println("Selected goods are deleted from db");
+//                    } catch (SQLException ex) {
+//                        ex.printStackTrace();
+//                        System.out.println("It isn't impossible to delete selected goods from db");
+//                    }
                 } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose an item to return");
             }});
 //------------------------------------------------------------------
@@ -343,10 +346,11 @@ public class GoodsFrame extends JFrame {
         container.add(bookTableScrollPage);
         container.add(btnDeleteGoods);
         container.add(btnGetCheque);
+        container.add(btnExit);
         container.add(totalSumLabel);
         container.add(totalSum);
-        container.add(btnExit);
-        setSize(700, 600);
+
+        setBounds(500, 150, 750, 600);
         setVisible(true);
         setResizable(false);
     }

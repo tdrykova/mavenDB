@@ -1,4 +1,6 @@
-package com.database.frames;
+package com.database;
+
+import com.database.frames.MainFrame;
 
 public class MainF {
 

@@ -79,8 +79,7 @@ public class AdminFrame extends JFrame implements ActionListener {
     // Панель со вкладками
     JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT);
 
-    AdminFrame()
-    {
+    AdminFrame() {
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
@@ -264,11 +263,9 @@ public class AdminFrame extends JFrame implements ActionListener {
     public int deleteSelectedItemFromDb(JTable table, String nameOfDb, String stringPrepStatement, GoodsTableModel model) {
         int ind = table.getSelectedRow();
         if (ind >= 0) {
-
             TableModel modelFirst = table.getModel();
             String[] row = new String[4];
             row[0] = String.valueOf(modelFirst.getValueAt(ind, 0));
-
             System.out.println(row[0]);
 
             try {
@@ -321,7 +318,7 @@ public class AdminFrame extends JFrame implements ActionListener {
                     }
                     idGoods = Math.max(idGoodsSmart, Math.max(idGoodsTv, idGoodsComp));
                     idGoods++;
-                    System.out.println(idGoods);
+                   // System.out.println(idGoods);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -345,7 +342,6 @@ public class AdminFrame extends JFrame implements ActionListener {
             } else if (nameOfDb.equals("")) JOptionPane.showMessageDialog(AdminFrame.this, "Choose name of db");
             else if (nameField.getText().isEmpty()) JOptionPane.showMessageDialog(AdminFrame.this, "Enter name of the item");
             else JOptionPane.showMessageDialog(AdminFrame.this, "Enter price of the item");
-
         }
 
         if (e.getSource() == resetButton) {

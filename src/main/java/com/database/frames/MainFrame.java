@@ -62,7 +62,6 @@ public class MainFrame extends JFrame {
         f.setVisible(false);
     }
 
-
     // function to increase progress
     public static void fill()
     {

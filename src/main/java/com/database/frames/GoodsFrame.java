@@ -97,11 +97,11 @@ public class GoodsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     String st = countLabel.getText();
                     int k = Integer.parseInt(st);
-                    if (k >=1)  k--;
+                    if (k >= 1)  k--;
                     countLabel.setText(Integer.toString(k));
                 }
             });
-            
+
             loadAllGoodsFromDb(i,connect,panel,btnAdd,defTable,countLabel,totalSum,totalVipSum, tabsLeft);
         }
 
@@ -179,12 +179,12 @@ public class GoodsFrame extends JFrame {
                     row[4] = String.valueOf(defTable.getValueAt(i, 4));
 
                     finalSum -= Integer.parseInt(row[4]);
-                    collectionOfAddedGoods.remove(row[1]);
+                    collectionOfAddedGoods.remove(row[0]);
                     totalSum.setText(String.valueOf(finalSum));
                     finalSumVip = (int) (finalSum * 0.95);
                     totalVipSum.setText(String.valueOf(finalSumVip));
                     modelSecond.removeRow(defTable.getSelectedRow());
-                    System.out.println("Selected goods is deleted from the basket");
+                    System.out.println("Selected goods are deleted from the basket");
                 } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose an item to return");
             }});
 //------------------------------------------------------------------
@@ -281,16 +281,16 @@ public class GoodsFrame extends JFrame {
                     row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
                     row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
 
-                    if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) {
+                    if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[0])) {
                         modelSecond.addRow(row);
-                        collectionOfAddedGoods.add(row[1]);
+                        collectionOfAddedGoods.add(row[0]);
                         System.out.println("Selected goods are added to basket from db of " + finalNameOfDb);
                         finalSum += Integer.parseInt(row[4]);
                         totalSum.setText(String.valueOf(finalSum));
                         finalSumVip = (int) (finalSum * 0.95);
                         totalVipSum.setText(String.valueOf(finalSumVip));
                     } else
-                    if (collectionOfAddedGoods.contains(row[1])) {
+                    if (collectionOfAddedGoods.contains(row[0])) {
                         JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
                                 "If you want to change a number of goods, return these and then choose correct count");
                     } else

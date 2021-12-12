@@ -54,6 +54,7 @@ public class GoodsTableModel extends AbstractTableModel {
         fireTableRowsDeleted(0, size);
     }
 
+    // common method for addition data
     public void addRowsDataFromDb(ResultSet result) {
         try {
             while (result.next()) {
@@ -85,5 +86,4 @@ public class GoodsTableModel extends AbstractTableModel {
         ResultSet result = connect.resultSetQuery("SELECT * FROM tv");
         addRowsDataFromDb(result);
     }
-
 }

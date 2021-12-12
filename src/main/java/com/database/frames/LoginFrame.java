@@ -50,7 +50,6 @@ public class LoginFrame extends JFrame implements ActionListener {
     JPasswordField passwordTextField = new JPasswordField();
 
     BufferedImage image;
-
     {
         try {
             image = ImageIO.read(new File("C:/Users/tatry/Downloads/comp.jpg"));
@@ -58,9 +57,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-
     JLabel label = new JLabel(new ImageIcon(image ));
-
 
     public static int isVip = 0;
 
@@ -73,9 +70,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         setLocationAndSize();
         addComponentsToContainer();
         addActionEvent();
-
     }
-
 
     public void setLayoutManager() {
         container.setLayout(null);
@@ -323,8 +318,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
                     } else System.out.println("You pressed NO");
                 }
-
-
     }
 
 }

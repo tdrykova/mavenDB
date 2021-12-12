@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class GoodsFrame extends JFrame {
 
-    private final ArrayList<String> nameOfGoods = new ArrayList<>();
+    private final ArrayList<String> collectionOfAddedGoods = new ArrayList<>();
 
     private DefaultTableModel modelSecond;
     Container container = getContentPane();
@@ -128,16 +128,16 @@ public class GoodsFrame extends JFrame {
                         row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
                         row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
 
-                        if (!countLabel.getText().equals("0") && !nameOfGoods.contains(row[1])) {
+                        if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) {
                             modelSecond.addRow(row);
-                            nameOfGoods.add(row[1]);
+                            collectionOfAddedGoods.add(row[1]);
                             System.out.println("Selected goods are added to basket from db of smartphones");
                             finalSum += Integer.parseInt(row[4]);
                             totalSum.setText(String.valueOf(finalSum));
                             finalSumVip = (int) (finalSum * 0.95);
                             totalVipSum.setText(String.valueOf(finalSumVip));
                         } else
-                            if (nameOfGoods.contains(row[1])) {
+                            if (collectionOfAddedGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
                                         "If you want to change a number of goods, return these and then choose correct count");
                             } else
@@ -175,16 +175,16 @@ public class GoodsFrame extends JFrame {
                             row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
                             row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
 
-                            if (!countLabel.getText().equals("0") && !nameOfGoods.contains(row[1])) {
+                            if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) { // Проверку на наличие элемента в коллекции
                                 modelSecond.addRow(row);
-                                nameOfGoods.add(row[1]);
+                                collectionOfAddedGoods.add(row[1]);
                                 System.out.println("Selected goods are added to basket from db computers");
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
                                 finalSumVip = (int) (finalSum * 0.95);
                                 totalVipSum.setText(String.valueOf(finalSumVip));
                             } else
-                            if (nameOfGoods.contains(row[1])) {
+                            if (collectionOfAddedGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
                                         "If you want to change a number of goods, return these and then choose correct count");
                             } else
@@ -221,9 +221,9 @@ public class GoodsFrame extends JFrame {
                                 row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
                                 row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
 
-                            if (!countLabel.getText().equals("0") && !nameOfGoods.contains(row[1])) {
+                            if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) {
                                 modelSecond.addRow(row);
-                                nameOfGoods.add(row[1]);
+                                collectionOfAddedGoods.add(row[1]);
                                 System.out.println("Selected goods are added to basket from db tv");
                                 finalSum += Integer.parseInt(row[4]);
                                 totalSum.setText(String.valueOf(finalSum));
@@ -231,7 +231,7 @@ public class GoodsFrame extends JFrame {
                                 totalVipSum.setText(String.valueOf(finalSumVip));
 
                             } else
-                            if (nameOfGoods.contains(row[1])) {
+                            if (collectionOfAddedGoods.contains(row[1])) {
                                 JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
                                         "If you want to change a number of goods, return these and then choose correct count");
                             } else
@@ -313,7 +313,7 @@ public class GoodsFrame extends JFrame {
                     row[4] = String.valueOf(defTable.getValueAt(i, 4));
 
                     finalSum -= Integer.parseInt(row[4]);
-                    nameOfGoods.remove(row[1]);
+                    collectionOfAddedGoods.remove(row[1]);
                     totalSum.setText(String.valueOf(finalSum));
                     finalSumVip = (int) (finalSum * 0.95);
                     totalVipSum.setText(String.valueOf(finalSumVip));

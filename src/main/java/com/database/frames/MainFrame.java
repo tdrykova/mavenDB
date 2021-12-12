@@ -73,7 +73,7 @@ public class MainFrame extends JFrame {
                 b.setValue(i + 10);
 
                 // delay the thread
-                Thread.sleep(1000);
+                Thread.sleep(50);
                 i += 20;
             }
         }

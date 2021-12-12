@@ -125,6 +125,8 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
                     }
                 }
                 res2.close();
+                connect.getConnection().close();
+                System.out.println("Connection with db of goods is closed");
             } catch (SQLException es) {
                 es.printStackTrace();
                 System.out.println("Goods aren't shown");

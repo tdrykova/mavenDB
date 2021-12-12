@@ -284,6 +284,9 @@ public class GoodsFrame extends JFrame {
                         preparedStatement.setString(6, row[5]);
                         preparedStatement.execute();
                         preparedStatement.close();
+                        connect.getConnection().close();
+                        System.out.println("Selected goods are added to db");
+                        System.out.println("Connection with db is closed");
                     }
                     catch (SQLException ex) {
                         ex.printStackTrace();
@@ -337,8 +340,10 @@ public class GoodsFrame extends JFrame {
                     preparedStatement2 = connect.getConnection().prepareStatement(DELETE_EXIT_USER);
                     preparedStatement2.setString(1, keyPhone); // id: 1, name: Name, age: 33, email: wfew
                     preparedStatement2.executeUpdate();
-                    System.out.println("Delete new user from db due to exit");
                     preparedStatement2.close();
+                    connect.getConnection().close();
+                    System.out.println("Delete new user from db due to exit");
+                    System.out.println("Connection with db is closed");
                     dispose();
                 } catch (SQLException ex) {
                     ex.printStackTrace();

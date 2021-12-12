@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public class GoodsTableModel extends AbstractTableModel {
 
-    private int columnCount = 4;
-    private ArrayList<String []> dataArrayList; // массив строк таблицы
+    private final ArrayList<String []> dataArrayList; // массив строк таблицы
 
     public GoodsTableModel() {
         dataArrayList = new ArrayList<String []>();
@@ -24,7 +23,7 @@ public class GoodsTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return columnCount;
+        return 4;
     }
 
     @Override
@@ -46,9 +45,7 @@ public class GoodsTableModel extends AbstractTableModel {
 
     // добавление строки = один массив(мн-во столбцов) - один элемент таблицы
     public void addData(String []row) {
-        String []rowTable = new String[getColumnCount()];
-        rowTable = row;
-        dataArrayList.add(rowTable);
+        dataArrayList.add(row);
     }
 
     public void removeAll(){
@@ -57,9 +54,7 @@ public class GoodsTableModel extends AbstractTableModel {
         fireTableRowsDeleted(0, size);
     }
 
-    public void addDataSmartPhones(ConnectionDb connect) {
-        ResultSet result = connect.resultSetQuery("SELECT * FROM smartphones");
-
+    public void addRowsDataFromDb(ResultSet result) {
         try {
             while (result.next()) {
                 String id = result.getString("id");
@@ -74,43 +69,21 @@ public class GoodsTableModel extends AbstractTableModel {
         } catch (SQLException e) {
             System.out.println("add data isn't worked");
         }
+    }
+
+    public void addDataSmartPhones(ConnectionDb connect) {
+        ResultSet result = connect.resultSetQuery("SELECT * FROM smartphones");
+        addRowsDataFromDb(result);
     }
 
     public void addDataComputers(ConnectionDb connect) {
         ResultSet result = connect.resultSetQuery("SELECT * FROM computers");
-
-        try {
-            while (result.next()) {
-                String id = result.getString("id");
-                String name = result.getString("name");
-                String count = result.getString("count");
-                String price = result.getString("price");
-
-                String []row = {id, name, count, price};
-                addData(row);
-            }
-            result.close();
-        } catch (SQLException e) {
-            System.out.println("add data isn't worked");
-        }
+        addRowsDataFromDb(result);
     }
 
     public void addDataTv(ConnectionDb connect) {
         ResultSet result = connect.resultSetQuery("SELECT * FROM tv");
-
-        try {
-            while (result.next()) {
-                String id = result.getString("id");
-                String name = result.getString("name");
-                String count = result.getString("count");
-                String email = result.getString("price");
-
-                String []row = {id, name, count, email};
-                addData(row);
-            }
-            result.close();
-        } catch (SQLException e) {
-            System.out.println("add data isn't worked");
-        }
+        addRowsDataFromDb(result);
     }
+
 }

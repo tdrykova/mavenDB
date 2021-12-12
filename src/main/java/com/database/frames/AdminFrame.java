@@ -235,6 +235,66 @@ public class AdminFrame extends JFrame implements ActionListener {
         container.add(tabsLeft);
     }
 
+    // common method for button ADD
+    public void insertNewItemInDb(int idGoods, String stringPrepStatement, JPanel panel, GoodsTableModel model, JScrollPane scroll) {
+        try {
+            preparedStatement = connect.getConnection().prepareStatement(stringPrepStatement);
+            preparedStatement.setInt(1, idGoods);
+            preparedStatement.setString(2, nameField.getText());
+            preparedStatement.setString(3, "1");
+            preparedStatement.setString(4, priceField.getText());
+            preparedStatement.execute();
+
+            String name = nameField.getText();
+            String count = "1";
+            String price = priceField.getText();
+
+            String[] row = {Integer.toString(idGoods), name, count, price};
+
+            panel.add(scroll);
+            model.addData(row);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error in an addition to db");
+        }
+    }
+
+    // common method for button DELETE
+    public int deleteSelectedItemFromDb(JTable table, String nameOfDb, String stringPrepStatement, GoodsTableModel model) {
+        int ind = table.getSelectedRow();
+        if (ind >= 0) {
+
+            TableModel modelFirst = table.getModel();
+            String[] row = new String[4];
+            row[0] = String.valueOf(modelFirst.getValueAt(ind, 0));
+
+            System.out.println(row[0]);
+
+            try {
+                preparedStatement3 = connect.getConnection().prepareStatement(stringPrepStatement);
+                preparedStatement3.setInt(1, Integer.parseInt(row[0]));
+                preparedStatement3.executeUpdate();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                System.out.println("Items aren't deleted from db " + nameOfDb);
+            }
+            model.removeAll();
+            switch (nameOfDb) {
+                case "smartphones":
+                    model.addDataSmartPhones(connect);
+                    break;
+                case "computers":
+                    model.addDataComputers(connect);
+                    break;
+                case "tv":
+                    model.addDataTv(connect);
+                    break;
+            }
+        }
+        return ind;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -268,80 +328,18 @@ public class AdminFrame extends JFrame implements ActionListener {
 
                 switch (nameOfDb) {
                     case "smartphones":
+                        insertNewItemInDb(idGoods, INSERT_NEW_SMARTPHONE, smartPanel, smartModel, smartScroll);
                         System.out.println("New item ia added to db of "  + nameOfDb);
-                        try {
-                            preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_SMARTPHONE);
-                            preparedStatement.setInt(1, idGoods);
-                            preparedStatement.setString(2, nameField.getText());
-                            preparedStatement.setString(3, "1");
-                            preparedStatement.setString(4, priceField.getText());
-                            preparedStatement.execute();
-
-                            String name = nameField.getText();
-                            String count = "1";
-                            String price = priceField.getText();
-
-                            String[] row = {Integer.toString(idGoods), name, count, price};
-
-                            smartPanel.add(smartScroll);
-                            smartModel.addData(row);
-
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                            System.out.println("Error in an addition to db");
-                        }
                         break;
 
                     case "computers":
+                        insertNewItemInDb(idGoods, INSERT_NEW_COMPUTER, compPanel, compModel, compScroll);
                         System.out.println("New item ia added to db of " + nameOfDb);
-                        try {
-                            // refresh db
-                            preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_COMPUTER);
-                            preparedStatement.setInt(1, idGoods);
-                            preparedStatement.setString(2, nameField.getText());
-                            preparedStatement.setString(3, "1");
-                            preparedStatement.setString(4, priceField.getText());
-                            preparedStatement.execute();
-
-                            // refresh Panel
-                            String name = nameField.getText();
-                            String count = "1";
-                            String price = priceField.getText();
-
-                            String[] row = {Integer.toString(idGoods), name, count, price};
-
-                            compPanel.add(compScroll);
-                            compModel.addData(row);
-
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                            System.out.println("Error in an addition to db");
-                        }
                         break;
 
                     case "tv":
+                        insertNewItemInDb(idGoods, INSERT_NEW_TV, tvPanel, tvModel, tvScroll);
                         System.out.println("New item ia added to db of " + nameOfDb);
-                        try {
-                            preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_TV);
-                            preparedStatement.setInt(1, idGoods);
-                            preparedStatement.setString(2, nameField.getText());
-                            preparedStatement.setString(3, "1");
-                            preparedStatement.setString(4, priceField.getText());
-                            preparedStatement.execute();
-
-                            String name = nameField.getText();
-                            String count = "1";
-                            String price = priceField.getText();
-
-                            String[] row = {Integer.toString(idGoods), name, count, price};
-
-                            tvPanel.add(tvScroll);
-                            tvModel.addData(row);
-
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                            System.out.println("Error in an addition to db");
-                        }
                         break;
                 }
             } else if (nameOfDb.equals("")) JOptionPane.showMessageDialog(AdminFrame.this, "Choose name of db");
@@ -363,58 +361,24 @@ public class AdminFrame extends JFrame implements ActionListener {
                 switch (nameOfDb) {
 
                     case "smartphones": {
-                        TableModel modelFirst = smartTable.getModel();
-                        int ind = smartTable.getSelectedRow();
-                        if (ind >= 0 && nameOfDb.equals("smartphones")) {
-
-                            String[] row = new String[4];
-                            row[0] = String.valueOf(modelFirst.getValueAt(ind, 0));
-
-                            System.out.println(row[0]);
-
-                            try {
-                                preparedStatement3 = connect.getConnection().prepareStatement(DELETE_SMART);
-                                preparedStatement3.setInt(1, Integer.parseInt(row[0]));
-                                preparedStatement3.executeUpdate();
-                                System.out.println("Item is deleted from db of " + nameOfDb);
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                                System.out.println("Items aren't deleted from db " + nameOfDb);
-                            }
-                            smartModel.removeAll();
-                            smartModel.addDataSmartPhones(connect);
+                        int index = deleteSelectedItemFromDb(smartTable,"smartphones",DELETE_SMART,smartModel);
+                        if (index >= 0 && nameOfDb.equals("smartphones")) {
+                            System.out.println("Item is deleted from db of " + nameOfDb);
                             break;
-                        } else if (ind < 0) {
+                        } else if (index < 0) {
                             JOptionPane.showMessageDialog(AdminFrame.this,
                                     "Choose deleted item from the table of " + nameOfDb
                             + " or change the name of selected db");
                             break;
                         }
-                        }
+                    }
 
                     case "tv": {
-                        TableModel modelFirst = tvTable.getModel();
-                        int ind = tvTable.getSelectedRow();
-                        if (ind >= 0 && nameOfDb.equals("tv")) {
-
-                            String[] row = new String[4];
-                            row[0] = String.valueOf(modelFirst.getValueAt(ind, 0));
-
-                            System.out.println(row[0]);
-
-                            try {
-                                preparedStatement3 = connect.getConnection().prepareStatement(DELETE_TV);
-                                preparedStatement3.setInt(1, Integer.parseInt(row[0])); // id: 1, name: Name, age: 33, email: wfew
-                                preparedStatement3.executeUpdate();
-                                System.out.println("Item is deleted from db of " + nameOfDb);
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                                System.out.println("Items aren't deleted from db " + nameOfDb);
-                            }
-                            tvModel.removeAll();
-                            tvModel.addDataTv(connect);
+                        int index = deleteSelectedItemFromDb(tvTable,"tv",DELETE_TV,tvModel);
+                        if (index >= 0 && nameOfDb.equals("tv")) {
+                            System.out.println("Item is deleted from db of " + nameOfDb);
                             break;
-                        } else if (ind < 0) {
+                        } else if (index < 0) {
                             JOptionPane.showMessageDialog(AdminFrame.this,
                                     "Choose deleted item from the table of " + nameOfDb
                                             + " or change the name of selected db");
@@ -422,28 +386,11 @@ public class AdminFrame extends JFrame implements ActionListener {
                         }
                     }
                     case "computers": {
-                        TableModel modelFirst = compTable.getModel();
-                        int ind = compTable.getSelectedRow();
-                        if (ind >= 0 && nameOfDb.equals("computers")) {
-
-                            String[] row = new String[4];
-                            row[0] = String.valueOf(modelFirst.getValueAt(ind, 0));
-
-                            System.out.println(row[0]);
-
-                            try {
-                                preparedStatement3 = connect.getConnection().prepareStatement(DELETE_COMP);
-                                preparedStatement3.setInt(1, Integer.parseInt(row[0]));
-                                preparedStatement3.executeUpdate();
-                                System.out.println("Item is deleted from db of " + nameOfDb);
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                                System.out.println("Items aren't deleted from db " + nameOfDb);
-                            }
-                            compModel.removeAll();
-                            compModel.addDataComputers(connect);
+                        int index = deleteSelectedItemFromDb(compTable,"computers",DELETE_COMP,compModel);
+                        if (index >= 0 && nameOfDb.equals("computers")) {
+                            System.out.println("Item is deleted from db of " + nameOfDb);
                             break;
-                        } else if (ind < 0) {
+                        } else if (index < 0) {
                             JOptionPane.showMessageDialog(AdminFrame.this,
                                     "Choose deleted item from the table of " + nameOfDb
                                             + " or change the name of selected db");
@@ -471,6 +418,4 @@ public class AdminFrame extends JFrame implements ActionListener {
             } else System.out.println("You pressed NO");
         }
     }
-
-
 }

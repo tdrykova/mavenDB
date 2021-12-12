@@ -32,6 +32,7 @@ public class ConnectionDb {
     public void finish() {
         try {
             mySqlConnection.close();
+            System.out.println("Connection is closed");
         } catch (SQLException e) {
             System.out.println("Connection isn't closed");
         }

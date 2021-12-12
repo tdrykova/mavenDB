@@ -62,7 +62,7 @@ public class GoodsFrame extends JFrame {
             totalSumVipLabel.setVisible(true);
         }
 
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         JTabbedPane tabsLeft = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
         // Создание вкладок
@@ -101,146 +101,8 @@ public class GoodsFrame extends JFrame {
                     countLabel.setText(Integer.toString(k));
                 }
             });
-
-            if (i == 1) {
-                GoodsTableModel goodsTableModel1 = new GoodsTableModel();
-                JTable bookTable1 = new JTable(goodsTableModel1);
-                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
-                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
-                tabsLeft.addTab("smartphones", panel);
-
-                panel.add(bookTableScrollPage1);
-                goodsTableModel1.addDataSmartPhones(connect);
-                System.out.println("Database of smartphones is uploaded");
-
-                btnAdd.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int m = bookTable1.getSelectedRow();
-                    if (m >= 0) {
-                        TableModel modelFirst = bookTable1.getModel();
-                        String [] row = new String[5];
-                        modelSecond = (DefaultTableModel)defTable.getModel();
-                        int i = bookTable1.getSelectedRow();
-
-                        row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
-                        row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
-                        row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
-                        row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
-                        row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
-
-                        if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) {
-                            modelSecond.addRow(row);
-                            collectionOfAddedGoods.add(row[1]);
-                            System.out.println("Selected goods are added to basket from db of smartphones");
-                            finalSum += Integer.parseInt(row[4]);
-                            totalSum.setText(String.valueOf(finalSum));
-                            finalSumVip = (int) (finalSum * 0.95);
-                            totalVipSum.setText(String.valueOf(finalSumVip));
-                        } else
-                            if (collectionOfAddedGoods.contains(row[1])) {
-                                JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
-                                        "If you want to change a number of goods, return these and then choose correct count");
-                            } else
-                                if (countLabel.getText().equals("0")) JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
-
-                    } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose goods from the table");
-                      countLabel.setText("0");
-                }});
-            }
-
-            if (i == 2) {
-                GoodsTableModel goodsTableModel1 = new GoodsTableModel();
-                JTable bookTable1 = new JTable(goodsTableModel1);
-                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
-                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
-
-                // Добавление вкладки
-                tabsLeft.addTab("computers", panel);
-                panel.add(bookTableScrollPage1);
-                goodsTableModel1.addDataComputers(connect);
-                System.out.println("Database of computers is uploaded");
-
-                btnAdd.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        int m = bookTable1.getSelectedRow();
-                        if (m >= 0) {
-                            TableModel modelFirst = bookTable1.getModel();
-                            String[] row = new String[5];
-                            modelSecond = (DefaultTableModel) defTable.getModel();
-                            int i = bookTable1.getSelectedRow();
-
-                            row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
-                            row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
-                            row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
-                            row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
-                            row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
-
-                            if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) { // Проверку на наличие элемента в коллекции
-                                modelSecond.addRow(row);
-                                collectionOfAddedGoods.add(row[1]);
-                                System.out.println("Selected goods are added to basket from db computers");
-                                finalSum += Integer.parseInt(row[4]);
-                                totalSum.setText(String.valueOf(finalSum));
-                                finalSumVip = (int) (finalSum * 0.95);
-                                totalVipSum.setText(String.valueOf(finalSumVip));
-                            } else
-                            if (collectionOfAddedGoods.contains(row[1])) {
-                                JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
-                                        "If you want to change a number of goods, return these and then choose correct count");
-                            } else
-                            if (countLabel.getText().equals("0")) JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
-                        } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose goods from the table");
-                        countLabel.setText("0");
-                    }});
-            }
-
-            if (i == 3) {
-                GoodsTableModel goodsTableModel1 = new GoodsTableModel();
-                JTable bookTable1 = new JTable(goodsTableModel1);
-                JScrollPane bookTableScrollPage1 = new JScrollPane(bookTable1); // что прокрутить
-                bookTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
-
-                // Добавление вкладки
-                tabsLeft.addTab("tv", panel);
-                panel.add(bookTableScrollPage1);
-                goodsTableModel1.addDataTv(connect);
-                System.out.println("Database of tv is uploaded");
-
-                btnAdd.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        int m = bookTable1.getSelectedRow();
-                        if (m >= 0) {
-                            TableModel modelFirst = bookTable1.getModel();
-                            String[] row = new String[5];
-                            modelSecond = (DefaultTableModel) defTable.getModel();
-                            int i = bookTable1.getSelectedRow();
-
-                                row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
-                                row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
-                                row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
-                                row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
-                                row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
-
-                            if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) {
-                                modelSecond.addRow(row);
-                                collectionOfAddedGoods.add(row[1]);
-                                System.out.println("Selected goods are added to basket from db tv");
-                                finalSum += Integer.parseInt(row[4]);
-                                totalSum.setText(String.valueOf(finalSum));
-                                finalSumVip = (int) (finalSum * 0.95);
-                                totalVipSum.setText(String.valueOf(finalSumVip));
-
-                            } else
-                            if (collectionOfAddedGoods.contains(row[1])) {
-                                JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
-                                        "If you want to change a number of goods, return these and then choose correct count");
-                            } else
-                            if (countLabel.getText().equals("0")) JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
-
-                        } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose goods from the table");
-                        countLabel.setText("0");
-                    }});
-            }
+            
+            loadAllGoodsFromDb(i,connect,panel,btnAdd,defTable,countLabel,totalSum,totalVipSum, tabsLeft);
         }
 
         // Подключение слушателя мыши
@@ -284,9 +146,10 @@ public class GoodsFrame extends JFrame {
                         preparedStatement.setString(6, row[5]);
                         preparedStatement.execute();
                         preparedStatement.close();
-                        connect.getConnection().close();
+                        //connect.getConnection().close();
                         System.out.println("Selected goods are added to db");
-                        System.out.println("Connection with db is closed");
+                        connect.finish();
+                        //System.out.println("Connection with db is closed");
                     }
                     catch (SQLException ex) {
                         ex.printStackTrace();
@@ -341,9 +204,10 @@ public class GoodsFrame extends JFrame {
                     preparedStatement2.setString(1, keyPhone); // id: 1, name: Name, age: 33, email: wfew
                     preparedStatement2.executeUpdate();
                     preparedStatement2.close();
-                    connect.getConnection().close();
+                    //connect.getConnection().close();
                     System.out.println("Delete new user from db due to exit");
-                    System.out.println("Connection with db is closed");
+                    connect.finish();
+                    //System.out.println("Connection with db is closed");
                     dispose();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -371,6 +235,71 @@ public class GoodsFrame extends JFrame {
         setBounds(500, 150, 750, 600);
         setVisible(true);
         setResizable(false);
+    }
+
+    // common method for button Get cheque
+    public void loadAllGoodsFromDb(int i, ConnectionDb connect, JPanel panel, JButton btnAdd, JTable defTable,
+                                   JLabel countLabel, JLabel totalSum, JLabel totalVipSum, JTabbedPane tabsLeft) {
+        String nameOfDb = "";
+        if (i == 1) nameOfDb = "smartphones";
+        else if (i == 2) nameOfDb = "computers";
+        else if (i == 3) nameOfDb = "tv";
+
+        GoodsTableModel goodsTableModel1 = new GoodsTableModel();
+        JTable goodsTable = new JTable(goodsTableModel1);
+        JScrollPane goodsTableScrollPage1 = new JScrollPane(goodsTable);
+        goodsTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
+        tabsLeft.addTab("smartphones", panel);
+
+        panel.add(goodsTableScrollPage1);
+        switch (nameOfDb) {
+            case "smartphones":
+                goodsTableModel1.addDataSmartPhones(connect);
+                break;
+            case "computers":
+                goodsTableModel1.addDataComputers(connect);
+                break;
+            case "tv":
+                goodsTableModel1.addDataTv(connect);
+                break;
+        }
+        System.out.println("Database of " + nameOfDb + " is uploaded");
+
+        String finalNameOfDb = nameOfDb;
+        btnAdd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int m = goodsTable.getSelectedRow();
+                if (m >= 0) {
+                    TableModel modelFirst = goodsTable.getModel();
+                    String [] row = new String[5];
+                    modelSecond = (DefaultTableModel)defTable.getModel();
+                    int i = goodsTable.getSelectedRow();
+
+                    row[0] = String.valueOf(modelFirst.getValueAt(i, 0));
+                    row[1] = String.valueOf(modelFirst.getValueAt(i, 1));
+                    row[2] = String.valueOf(Integer.parseInt(countLabel.getText()));
+                    row[3] = String.valueOf(modelFirst.getValueAt(i, 3));
+                    row[4] = String.valueOf(Integer.parseInt(countLabel.getText()) * Integer.parseInt(String.valueOf(row[3])));
+
+                    if (!countLabel.getText().equals("0") && !collectionOfAddedGoods.contains(row[1])) {
+                        modelSecond.addRow(row);
+                        collectionOfAddedGoods.add(row[1]);
+                        System.out.println("Selected goods are added to basket from db of " + finalNameOfDb);
+                        finalSum += Integer.parseInt(row[4]);
+                        totalSum.setText(String.valueOf(finalSum));
+                        finalSumVip = (int) (finalSum * 0.95);
+                        totalVipSum.setText(String.valueOf(finalSumVip));
+                    } else
+                    if (collectionOfAddedGoods.contains(row[1])) {
+                        JOptionPane.showMessageDialog(GoodsFrame.this, "This item is added. " +
+                                "If you want to change a number of goods, return these and then choose correct count");
+                    } else
+                    if (countLabel.getText().equals("0")) JOptionPane.showMessageDialog(GoodsFrame.this, "Choose count of selected goods");
+
+                } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose goods from the table");
+                countLabel.setText("0");
+            }});
+
     }
 
 

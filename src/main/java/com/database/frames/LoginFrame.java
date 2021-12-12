@@ -245,7 +245,6 @@ public class LoginFrame extends JFrame implements ActionListener {
                             }
                         }
                         res2.close();
-                        connect.getConnection().close();
                         System.out.println("Connection with db is closed");
                     } catch (SQLException es) {
                         es.printStackTrace();
@@ -262,10 +261,11 @@ public class LoginFrame extends JFrame implements ActionListener {
                             preparedStatement.setString(3, phoneTextField.getText());
                             preparedStatement.execute();
                             preparedStatement.close();
-                            connect.getConnection().close();
+                            //connect.getConnection().close();
+                            connect.finish();
                             System.out.println("New user has entered");
                             System.out.println("New user has added to bd");
-                            System.out.println("Connection with db is closed");
+                           // System.out.println("Connection with db is closed");
                             dispose();
                             new GoodsFrame();
                         } catch (SQLException ex) {

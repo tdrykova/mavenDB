@@ -187,7 +187,7 @@ public class GoodsFrame extends JFrame {
                     System.out.println("Selected goods are deleted from the basket");
                 } else JOptionPane.showMessageDialog(GoodsFrame.this, "Choose an item to return");
             }});
-//------------------------------------------------------------------
+
         JButton btnExit = new JButton();
         btnExit.setText("EXIT");
         btnExit.addActionListener(new ActionListener() {
@@ -249,7 +249,7 @@ public class GoodsFrame extends JFrame {
         JTable goodsTable = new JTable(goodsTableModel1);
         JScrollPane goodsTableScrollPage1 = new JScrollPane(goodsTable);
         goodsTableScrollPage1.setPreferredSize(new Dimension(400, 200)); // размер табл
-        tabsLeft.addTab("smartphones", panel);
+        tabsLeft.addTab(nameOfDb, panel);
 
         panel.add(goodsTableScrollPage1);
         switch (nameOfDb) {

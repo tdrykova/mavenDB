@@ -10,56 +10,39 @@ import java.io.IOException;
 
 public class MainFrame extends JFrame {
 
-    static JFrame f;
-    static JProgressBar b;
-    Container container = getContentPane();
-
+    static JFrame frame = new JFrame("Opening...");
+    static JProgressBar bar = new JProgressBar();
     public void createMainFrame() {
 
         BufferedImage image = null;
 
-        {
             try {
                 image = ImageIO.read(new File("C:/Users/tatry/Downloads/basket.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
 
-        JLabel label = new JLabel(new ImageIcon(image));
-
-        // create a frame
-        f = new JFrame("Opening...");
-
-        // create a panel
-        JPanel p = new JPanel();
+        JLabel labelImage = new JLabel(new ImageIcon(image));
+        JPanel panel = new JPanel();
 
         JLabel nameStore = new JLabel("TechnoPoint");
         nameStore.setBounds(0,30,100,200);
         nameStore.setFont(new Font("TimesRoman", Font.BOLD, 22));
 
-        // create a progressbar
-        b = new JProgressBar();
+        bar.setValue(0);
+        bar.setStringPainted(true);
 
-        // set initial value
-        b.setValue(0);
+        panel.add(bar);
+        panel.add(nameStore);
+        panel.add(labelImage);
 
-        b.setStringPainted(true);
-
-
-        p.add(b);
-        p.add(nameStore);
-        p.add(label);
-
-        // add panel
-        f.add(p);
-
-        f.setBounds(400, 300, 600, 550);
-        f.setResizable(false);
-        f.setVisible(true);
+        frame.add(panel);
+        frame.setBounds(700, 200, 600, 550);
+        frame.setResizable(false);
+        frame.setVisible(true);
 
         fill();
-        f.setVisible(false);
+        frame.setVisible(false);
     }
 
     // function to increase progress
@@ -69,16 +52,16 @@ public class MainFrame extends JFrame {
         try {
             while (i <= 100) {
                 // fill the menu bar
-                b.setValue(i + 10);
-
+                bar.setValue(i + 10);
                 // delay the thread
                 Thread.sleep(50);
                 i += 20;
             }
         }
         catch (Exception e) {
+            System.out.println("ProgressBar isn't filled");
         }
-        f.dispose();
+        frame.dispose();
 
         LoginFrame frame = new LoginFrame();
         frame.setTitle("Login Form");

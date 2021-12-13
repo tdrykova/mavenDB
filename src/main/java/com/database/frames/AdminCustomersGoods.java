@@ -42,7 +42,7 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
         addComponentsToContainer();
         addActionEvent();
 
-        setSize(900, 600);
+        setBounds(500,20,900, 600);
         setVisible(true);
         setResizable(false);
     }
@@ -150,7 +150,7 @@ public class AdminCustomersGoods extends JFrame implements ActionListener {
             AdminFrame adminFrame = new AdminFrame();
             adminFrame.setTitle("Admin Form");
             adminFrame.setVisible(true);
-            adminFrame.setBounds(10, 10, 1300, 800);
+            adminFrame.setBounds(300, 20, 1300, 800);
             adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             adminFrame.setResizable(false);
         }

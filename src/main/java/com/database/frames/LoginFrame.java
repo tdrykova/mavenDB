@@ -249,7 +249,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
                         try {
                             countUsers++;
-
                             preparedStatement = connect.getConnection().prepareStatement(INSERT_NEW_USER);
                             preparedStatement.setInt(1, countUsers);
                             preparedStatement.setString(2, userTextField.getText());
@@ -281,7 +280,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                     AdminFrame adminFrame = new AdminFrame();
                     adminFrame.setTitle("Admin Form");
                     adminFrame.setVisible(true);
-                    adminFrame.setBounds(10, 10, 1300, 800);
+                    adminFrame.setBounds(300, 20, 1300, 800);
                     adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     adminFrame.setResizable(false);
                 } else {
@@ -289,7 +288,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 }
             }
         }
-//-------------------------------------------------------------
+
             if (e.getSource() == showPassword) {
                 if (showPassword.isSelected()) {
                     passwordTextField.setEchoChar((char) 0);
@@ -299,7 +298,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                     System.out.println("Password is disposed");
                 }
             }
-//-------------------------------------------------------------
+
                 if (e.getSource() == resetButton) {
                     userTextField.setText("");
                     phoneTextField.setText("");
@@ -319,5 +318,4 @@ public class LoginFrame extends JFrame implements ActionListener {
                     } else System.out.println("You pressed NO");
                 }
     }
-
 }
